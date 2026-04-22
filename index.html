@@ -10,9 +10,9 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --white: #FFFFFF;
-            --cream: #EBF5FF;
-            --light-yellow: #DBEAFE;
+            --white: #F0F9FF;
+            --cream: #E0F2FE;
+            --light-yellow: #BAE6FD;
             --soft-orange: #7DD3FC;
             --orange: #38BDF8;
             --deep-orange: #0284C7;
@@ -25,7 +25,7 @@
 
         body {
             font-family: 'Noto Sans SC', sans-serif;
-            background: var(--white);
+            background: linear-gradient(180deg, #F0F9FF 0%, #E0F2FE 50%, #F0F9FF 100%);
             color: var(--dark-brown);
             overflow-x: hidden;
             cursor: url('photos/paw-cursor.png') 16 16, auto;
@@ -128,7 +128,7 @@
         .hero {
             text-align: center;
             padding: 60px 20px 40px;
-            background: var(--white);
+            background: linear-gradient(180deg, #F0F9FF 0%, #DBEAFE 100%);
             position: relative;
             overflow: hidden;
         }
@@ -141,7 +141,7 @@
             transform: translateX(-50%);
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.04) 0%, transparent 60%);
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, transparent 60%);
             border-radius: 50%;
             pointer-events: none;
         }
@@ -177,7 +177,7 @@
             width: 168px;
             height: 168px;
             border-radius: 50%;
-            background: var(--white);
+            background: #F0F9FF;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -265,7 +265,7 @@
 
         /* ========== 档案卡 ========== */
         .profile-card {
-            background: var(--white);
+            background: #F0F9FF;
             border-radius: 24px;
             padding: 32px;
             box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04);
@@ -281,7 +281,7 @@
             right: -40px;
             width: 100px;
             height: 100px;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.06) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
             border-radius: 50%;
         }
 
@@ -326,7 +326,7 @@
 
         /* ========== 互动板块（投喂/铲屎/抚摸） ========== */
         .interact-section {
-            background: var(--light-yellow);
+            background: linear-gradient(180deg, #F0F9FF 0%, #E0F2FE 100%);
         }
 
         .interact-grid {
@@ -336,7 +336,7 @@
         }
 
         .interact-card {
-            background: var(--white);
+            background: #F0F9FF;
             border-radius: 24px;
             padding: 32px 20px;
             text-align: center;
@@ -569,7 +569,7 @@
 
         /* ========== 相册区域 ========== */
         .gallery-section {
-            background: var(--white);
+            background: linear-gradient(180deg, #DBEAFE 0%, #F0F9FF 100%);
         }
 
         .gallery-grid {
@@ -579,7 +579,7 @@
         }
 
         .gallery-item {
-            background: var(--white);
+            background: #FFFFFF;
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
@@ -706,11 +706,11 @@
 
         /* ========== 上传区域 ========== */
         .upload-section {
-            background: var(--white);
+            background: #F0F9FF;
         }
 
         .upload-area {
-            background: var(--white);
+            background: #F0F9FF;
             border-radius: 20px;
             padding: 40px;
             border: 2px dashed var(--soft-orange);
@@ -982,7 +982,7 @@
 
         /* 每张照片卡片 - 带时间 */
         .timeline-photo {
-            background: var(--white);
+            background: #FFFFFF;
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
@@ -1151,7 +1151,7 @@
         }
 
         .trait-box {
-            background: var(--white);
+            background: #F0F9FF;
             border-radius: 20px;
             padding: 28px;
             border: 1px solid rgba(56, 189, 248, 0.1);
@@ -1230,7 +1230,7 @@
 
         /* ========== 迁徙路线 ========== */
         .route-section {
-            background: var(--white);
+            background: #F0F9FF;
         }
 
         .route-display {
@@ -1290,11 +1290,11 @@
 
         /* ========== 猫语录 ========== */
         .quotes-section {
-            background: var(--white);
+            background: #F0F9FF;
         }
 
         .quote-box {
-            background: var(--white);
+            background: #F0F9FF;
             border-radius: 20px;
             padding: 36px;
             text-align: center;
