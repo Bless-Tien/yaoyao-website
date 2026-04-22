@@ -1,0 +1,3294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐱 瑶瑶的小窝 - Yaoyao's Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ========== 全局样式 ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --white: #FFFFFF;
+            --cream: #F0F7FF;
+            --light-yellow: #EDF4FC;
+            --soft-orange: #B8D4F0;
+            --orange: #5B9BD5;
+            --deep-orange: #2E75B6;
+            --warm-brown: #4A6FA5;
+            --dark-brown: #2C3E50;
+            --pink: #B8C9E0;
+            --mint: #98FB98;
+            --coral: #5B9BD5;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--white);
+            color: var(--dark-brown);
+            overflow-x: hidden;
+            cursor: url('photos/paw-cursor.png') 16 16, auto;
+        }
+
+        /* 悬停在可点击元素上时光标指向指尖 */
+        a, button, [onclick], input[type="text"], input[type="email"], input[type="password"],
+        .gallery-item img, .timeline-photo img, .add-photo-card, .timeline-upload-card,
+        .mood-btn, .trait-tag, .nav-auth-btn,
+        .upload-area, .edit-btn, .delete-btn, .close-auth,
+        .gallery-caption .edit-btn {
+            cursor: url('photos/paw-cursor.png') 16 16, pointer;
+        }
+
+        /* ========== 漂浮装饰 ========== */
+        .floating-deco {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            font-size: 28px;
+            opacity: 0.12;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(105vh) rotate(0deg) scale(1); opacity: 0; }
+            10% { opacity: 0.12; }
+            50% { transform: translateY(50vh) rotate(180deg) scale(1.1); opacity: 0.15; }
+            90% { opacity: 0.12; }
+            100% { transform: translateY(-50px) rotate(360deg) scale(0.9); opacity: 0; }
+        }
+
+        /* ========== 导航栏 ========== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(91, 155, 213, 0.15);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .navbar .logo {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 24px;
+            color: var(--deep-orange);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--warm-brown);
+            font-size: 15px;
+            font-weight: 500;
+            padding: 6px 16px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .nav-links a:hover {
+            background: var(--light-yellow);
+            color: var(--dark-brown);
+            border-color: var(--orange);
+            transform: translateY(-2px);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--deep-orange);
+        }
+
+        /* ========== 主内容 ========== */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            padding-top: 70px;
+        }
+
+        /* ========== Hero 区域 ========== */
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            background: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(91, 155, 213, 0.04) 0%, transparent 60%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+
+        .avatar-ring {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(var(--soft-orange), var(--light-yellow), var(--soft-orange), var(--light-yellow), var(--soft-orange));
+            padding: 6px;
+            animation: ringRotate 8s linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes ringRotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .avatar-inner {
+            width: 168px;
+            height: 168px;
+            border-radius: 50%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: ringRotate 8s linear infinite reverse;
+            overflow: hidden;
+        }
+
+        .avatar-inner svg,
+        .avatar-inner img {
+            width: 140px;
+            height: 140px;
+        }
+
+        .hero h1 {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 56px;
+            color: var(--deep-orange);
+            text-shadow: 3px 3px 0 rgba(91, 155, 213, 0.3);
+            margin-bottom: 8px;
+        }
+
+        .hero .tagline {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 20px;
+            color: var(--warm-brown);
+            letter-spacing: 3px;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 28px;
+            color: var(--deep-orange);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--warm-brown);
+            margin-top: 2px;
+        }
+
+        /* ========== 通用板块 ========== */
+        .section {
+            padding: 50px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 36px;
+            color: var(--deep-orange);
+            margin-bottom: 8px;
+        }
+
+        .section-header p {
+            color: var(--warm-brown);
+            font-size: 14px;
+        }
+
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: var(--orange);
+            border-radius: 2px;
+            margin: 12px auto 0;
+        }
+
+        /* ========== 档案卡 ========== */
+        .profile-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(91, 155, 213, 0.12);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(91, 155, 213, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .profile-item {
+            background: var(--light-yellow);
+            border-radius: 16px;
+            padding: 18px 14px;
+            text-align: center;
+            border: 1px solid rgba(91, 155, 213, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .profile-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .profile-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .profile-label {
+            font-size: 11px;
+            color: var(--warm-brown);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .profile-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark-brown);
+            margin-top: 4px;
+        }
+
+        /* ========== 互动板块（投喂/铲屎/抚摸） ========== */
+        .interact-section {
+            background: var(--light-yellow);
+        }
+
+        .interact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .interact-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 32px 20px;
+            text-align: center;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(91, 155, 213, 0.1);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .interact-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 24px rgba(91, 155, 213, 0.12);
+            border-color: var(--soft-orange);
+        }
+
+        .interact-card:active {
+            transform: translateY(-4px) scale(0.97);
+        }
+
+        .interact-img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            background: var(--light-yellow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            border: 2px solid var(--soft-orange);
+            transition: transform 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .interact-card:hover .interact-img {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .interact-card:active .interact-img {
+            transform: scale(0.9);
+        }
+
+        /* 点击涟漪效果 */
+        .interact-card .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(91, 155, 213, 0.2);
+            transform: scale(0);
+            animation: rippleAnim 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes rippleAnim {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* 互动计数器动画 */
+        .interact-counter.bump span {
+            display: inline-block;
+            animation: counterBump 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes counterBump {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.5); color: #FF6B6B; }
+            100% { transform: scale(1); }
+        }
+
+        .interact-card h3 {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 22px;
+            color: var(--deep-orange);
+            margin-bottom: 6px;
+        }
+
+        /* 投喂卡片专属 */
+        .interact-card.feed:hover {
+            border-color: #7FB3E0;
+            box-shadow: 0 8px 28px rgba(91, 155, 213, 0.18);
+        }
+        .interact-card.feed .interact-img {
+            background: linear-gradient(135deg, #E8F0FA, #C5DDEF);
+        }
+        .interact-card.feed h3 { color: #2E75B6; }
+
+        /* 铲屎卡片专属 */
+        .interact-card.clean:hover {
+            border-color: #A5D6A7;
+            box-shadow: 0 8px 28px rgba(102, 187, 106, 0.18);
+        }
+        .interact-card.clean .interact-img {
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+        }
+        .interact-card.clean h3 { color: #388E3C; }
+
+        /* 抚摸卡片专属 */
+        .interact-card.pet:hover {
+            border-color: #D4B8E8;
+            box-shadow: 0 8px 28px rgba(123, 45, 142, 0.15);
+        }
+        .interact-card.pet .interact-img {
+            background: linear-gradient(135deg, #FCE4EC, #D4B8E8);
+        }
+        .interact-card.pet h3 { color: #7B2D8E; }
+
+        .interact-card p {
+            font-size: 13px;
+            color: var(--warm-brown);
+        }
+
+        .interact-counter {
+            margin-top: 12px;
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 18px;
+            color: var(--orange);
+        }
+
+        /* 互动特效容器 */
+        .effect-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .effect-particle {
+            position: absolute;
+            animation: particleFly 1.5s ease-out forwards;
+            font-size: 32px;
+        }
+
+        @keyframes particleFly {
+            0% { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.3) rotate(var(--rot)); }
+        }
+
+        .heart-burst {
+            position: absolute;
+            font-size: 48px;
+            animation: heartFloat 2s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes heartFloat {
+            0% { opacity: 1; transform: scale(0) translateY(0); }
+            20% { opacity: 1; transform: scale(1.2) translateY(-10px); }
+            100% { opacity: 0; transform: scale(0.8) translateY(-120px); }
+        }
+
+        @keyframes foodDrop {
+            0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+            60% { opacity: 1; transform: translateY(var(--ty)) rotate(calc(var(--rot) * 0.6)) scale(0.9); }
+            100% { opacity: 0; transform: translateY(var(--ty)) translateX(var(--tx)) rotate(var(--rot)) scale(0.4); }
+        }
+
+        @keyframes sparkleFly {
+            0% { opacity: 1; transform: scale(1) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.5) rotate(180deg); }
+            100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0) rotate(var(--rot)); }
+        }
+
+        @keyframes cardShake {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            15% { transform: translateX(-6px) rotate(-2deg); }
+            30% { transform: translateX(5px) rotate(1deg); }
+            45% { transform: translateX(-4px) rotate(-1deg); }
+            60% { transform: translateX(3px) rotate(1deg); }
+            75% { transform: translateX(-2px) rotate(0deg); }
+        }
+
+        .interact-card.purring {
+            animation: purrVibrate 0.15s ease-in-out infinite;
+        }
+
+        @keyframes purrVibrate {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(1px) translateY(-0.5px); }
+            75% { transform: translateX(-1px) translateY(0.5px); }
+        }
+
+        .cat-response {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 24px 36px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            border: 3px solid var(--orange);
+            z-index: 1000;
+            text-align: center;
+            animation: popupIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            font-family: 'ZCOOL KuaiLe', cursive;
+        }
+
+        .cat-response .emoji {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+
+        .cat-response .text {
+            font-size: 20px;
+            color: var(--dark-brown);
+        }
+
+        .cat-response .sub {
+            font-size: 14px;
+            color: var(--warm-brown);
+            margin-top: 4px;
+        }
+
+        @keyframes popupIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes popupOut {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.3); }
+        }
+
+        /* ========== 相册区域 ========== */
+        .gallery-section {
+            background: var(--white);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(91, 155, 213, 0.08);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+            border-radius: 16px 16px 0 0;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-caption {
+            padding: 16px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* 编辑按钮 */
+        .gallery-caption .edit-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(91, 155, 213, 0.15);
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            font-size: 12px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .gallery-item:hover .edit-btn {
+            opacity: 1;
+        }
+        .gallery-caption .edit-btn:hover {
+            transform: scale(1.15);
+            background: rgba(91, 155, 213, 0.3);
+        }
+
+        .gallery-caption h4 {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 16px;
+            color: var(--deep-orange);
+            margin-bottom: 4px;
+        }
+
+        .gallery-caption p {
+            font-size: 13px;
+            color: var(--warm-brown);
+            line-height: 1.6;
+        }
+
+        .gallery-placeholder {
+            width: 100%;
+            height: 220px;
+            background: var(--light-yellow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+        }
+
+        /* 相册删除按钮（固定照片） */
+        .gallery-item .delete-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 107, 107, 0.9);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 5;
+        }
+
+        .gallery-item:hover .delete-btn {
+            opacity: 1;
+        }
+
+        .gallery-item .delete-btn:hover {
+            transform: scale(1.15);
+            background: #FF4444;
+        }
+
+        /* 删除动画 */
+        .gallery-item.deleting,
+        .user-photo.deleting {
+            animation: deleteAnim 0.4s ease forwards;
+        }
+
+        @keyframes deleteAnim {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.9) rotate(-3deg); opacity: 0.6; }
+            100% { transform: scale(0.7) rotate(5deg); opacity: 0; height: 0; padding: 0; margin: 0; overflow: hidden; }
+        }
+
+        /* ========== 上传区域 ========== */
+        .upload-section {
+            background: var(--white);
+        }
+
+        .upload-area {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 40px;
+            border: 2px dashed var(--soft-orange);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            background: var(--light-yellow);
+            border-color: var(--orange);
+            transform: scale(1.01);
+        }
+
+        .upload-area.dragover {
+            background: var(--light-yellow);
+            border-color: var(--orange);
+        }
+
+        .upload-icon {
+            font-size: 56px;
+            margin-bottom: 16px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .upload-area h3 {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 22px;
+            color: var(--deep-orange);
+            margin-bottom: 8px;
+        }
+
+        .upload-area p {
+            color: var(--warm-brown);
+            font-size: 14px;
+        }
+
+        .upload-input { display: none; }
+
+        /* 相册中的上传卡片 */
+        .add-photo-card {
+            cursor: pointer;
+            border: 2px dashed #A8CCE8;
+            background: rgba(237, 244, 252, 0.5);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .add-photo-card:hover {
+            border-color: #FF9F43;
+            background: rgba(197, 221, 239, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(91, 155, 213, 0.12);
+        }
+        .add-photo-card:active {
+            transform: scale(0.97);
+        }
+        .add-photo-card.dragover {
+            border-color: #FF6B6B;
+            background: rgba(255, 182, 193, 0.2);
+        }
+        .add-photo-placeholder {
+            text-align: center;
+            color: var(--warm-brown);
+        }
+        .add-photo-icon {
+            font-size: 48px;
+            margin-bottom: 8px;
+            animation: photoBounce 2s ease-in-out infinite;
+        }
+        @keyframes photoBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-6px) rotate(-5deg); }
+            75% { transform: translateY(-3px) rotate(3deg); }
+        }
+        .add-photo-placeholder p {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 16px;
+            color: var(--deep-orange);
+            margin-bottom: 4px;
+        }
+        .add-photo-placeholder span {
+            font-size: 12px;
+            color: var(--warm-brown);
+            opacity: 0.7;
+        }
+
+        /* 上传文字输入浮层 */
+        .caption-float {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border-radius: 50px;
+            padding: 8px 8px 8px 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            z-index: 1500;
+            align-items: center;
+            gap: 10px;
+            animation: slideUp 0.3s ease;
+            border: 2px solid #B8D4F0;
+        }
+        .caption-float.show {
+            display: flex;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        .caption-float input {
+            border: none;
+            outline: none;
+            font-size: 15px;
+            font-family: 'Noto Sans SC', sans-serif;
+            color: #5C4A1E;
+            width: 240px;
+            background: transparent;
+        }
+        .caption-float button {
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(135deg, #5B9BD5, #2E75B6);
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            font-family: 'Noto Sans SC', sans-serif;
+            white-space: nowrap;
+            transition: transform 0.2s;
+        }
+        .caption-float button:hover {
+            transform: scale(1.05);
+        }
+
+        .caption-input {
+            display: none;
+            margin-top: 20px;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .caption-input.show {
+            display: flex;
+        }
+
+        .caption-input input {
+            padding: 12px 20px;
+            border: 1px solid var(--soft-orange);
+            border-radius: 50px;
+            font-size: 15px;
+            outline: none;
+            width: 280px;
+            font-family: 'Noto Sans SC', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .caption-input input:focus {
+            border-color: var(--orange);
+        }
+
+        .caption-input input::placeholder {
+            color: #ccc;
+        }
+
+        .caption-input button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--orange), var(--deep-orange));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .caption-input button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(91, 155, 213, 0.3);
+        }
+
+        /* ========== 用户上传照片 - 时间轴 ========== */
+        .user-timeline {
+            margin-top: 36px;
+            position: relative;
+            padding-left: 40px;
+        }
+        .user-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #A8CCE8 0%, #FFECD2 30%, #A8CCE8 100%);
+            border-radius: 3px;
+        }
+
+        /* 时间节点（日期分组） */
+        .timeline-date-group {
+            position: relative;
+            margin-bottom: 32px;
+        }
+        .timeline-date-group:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 日期标签 */
+        .timeline-date-label {
+            position: absolute;
+            left: -40px;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+        .timeline-date-label .date-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5B9BD5, #2E75B6);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px rgba(91, 155, 213, 0.3), 0 2px 8px rgba(255, 107, 107, 0.2);
+            transition: transform 0.3s ease;
+        }
+        .timeline-date-group:first-child .date-dot {
+            width: 16px;
+            height: 16px;
+            box-shadow: 0 0 0 3px rgba(91, 155, 213, 0.3), 0 0 12px rgba(255, 107, 107, 0.3);
+        }
+
+        /* 日期文字 */
+        .timeline-date-text {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 15px;
+            color: var(--deep-orange);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .timeline-date-text::before {
+            content: '📅';
+            font-size: 16px;
+        }
+
+        /* 时间轴内的照片 grid */
+        .timeline-photos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        /* 每张照片卡片 - 带时间 */
+        .timeline-photo {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(91, 155, 213, 0.08);
+            position: relative;
+            animation: fadeInUp 0.5s ease;
+            transition: all 0.4s ease;
+        }
+        .timeline-photo:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+        .timeline-photo img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
+        .timeline-photo:hover img {
+            transform: scale(1.05);
+        }
+        .timeline-photo .photo-info {
+            padding: 10px 12px;
+            text-align: center;
+        }
+        .timeline-photo .photo-title {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 14px;
+            color: var(--deep-orange);
+            margin-bottom: 4px;
+        }
+        .timeline-photo .photo-desc {
+            font-size: 12px;
+            color: var(--warm-brown);
+            line-height: 1.5;
+            margin-bottom: 4px;
+        }
+        .timeline-photo .photo-time {
+            font-size: 11px;
+            color: #BFA88A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .timeline-photo .photo-time::before {
+            content: '🕐';
+            font-size: 10px;
+        }
+        .timeline-photo .photo-uploader {
+            font-size: 11px;
+            color: var(--warm-brown);
+            opacity: 0.8;
+        }
+        .timeline-photo .delete-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 107, 107, 0.9);
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 5;
+        }
+        .timeline-photo:hover .delete-btn {
+            opacity: 1;
+        }
+        .timeline-photo .delete-btn:hover {
+            transform: scale(1.15);
+            background: #FF4444;
+        }
+        .timeline-photo .edit-btn {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(91, 155, 213, 0.15);
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            font-size: 12px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+        }
+        .timeline-photo:hover .edit-btn {
+            opacity: 1;
+        }
+        .timeline-photo .edit-btn:hover {
+            transform: scale(1.15);
+            background: rgba(91, 155, 213, 0.3);
+        }
+
+        /* 删除动画 */
+        .timeline-photo.deleting {
+            animation: deleteAnim 0.4s ease forwards;
+        }
+
+        /* 上传卡片（时间轴末尾） */
+        .timeline-upload-card {
+            grid-column: 1 / -1;
+            max-width: 320px;
+            cursor: pointer;
+            border: 2px dashed #A8CCE8;
+            background: rgba(237, 244, 252, 0.5);
+            border-radius: 16px;
+            padding: 32px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .timeline-upload-card:hover {
+            border-color: #FF9F43;
+            background: rgba(197, 221, 239, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(91, 155, 213, 0.12);
+        }
+        .timeline-upload-card.dragover {
+            border-color: #FF6B6B;
+            background: rgba(255, 182, 193, 0.2);
+        }
+        .timeline-upload-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+            animation: photoBounce 2s ease-in-out infinite;
+        }
+        .timeline-upload-card p {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 15px;
+            color: var(--deep-orange);
+            margin-bottom: 4px;
+        }
+        .timeline-upload-card span {
+            font-size: 12px;
+            color: var(--warm-brown);
+            opacity: 0.7;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== 优缺点 ========== */
+        .traits-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .trait-box {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid rgba(91, 155, 213, 0.1);
+        }
+
+        .trait-box h3 {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 22px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .trait-box.pros h3 { color: #059669; }
+        .trait-box.cons h3 { color: #ec4899; }
+
+        .trait-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .trait-tag {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .trait-tag.pro {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border: 2px solid #6ee7b7;
+        }
+
+        .trait-tag.con {
+            background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+            color: #9d174d;
+            border: 2px solid #f9a8d4;
+        }
+
+        .trait-tag:hover {
+            transform: scale(1.08) rotate(-3deg);
+        }
+
+        /* ========== 爱好标签 ========== */
+        .hobby-section {
+            background: var(--light-yellow);
+        }
+
+        .hobby-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+        }
+
+        .hobby-tag {
+            background: var(--orange);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(91, 155, 213, 0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: default;
+        }
+
+        .hobby-tag:hover {
+            transform: scale(1.08) rotate(-2deg);
+            box-shadow: 0 4px 16px rgba(91, 155, 213, 0.3);
+        }
+
+        /* ========== 迁徙路线 ========== */
+        .route-section {
+            background: var(--white);
+        }
+
+        .route-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            padding: 30px;
+            flex-wrap: wrap;
+        }
+
+        .route-city {
+            background: linear-gradient(135deg, var(--orange), var(--deep-orange));
+            color: white;
+            padding: 20px 32px;
+            border-radius: 20px;
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 24px;
+            box-shadow: 0 6px 20px rgba(91, 155, 213, 0.3);
+            position: relative;
+        }
+
+        .route-city.current {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .route-city.current::after {
+            content: '🏠 现居';
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            background: var(--coral);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+        }
+
+        .route-arrow {
+            font-size: 36px;
+            color: var(--orange);
+            animation: arrowPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes arrowPulse {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        .route-label {
+            text-align: center;
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--warm-brown);
+        }
+
+        /* ========== 猫语录 ========== */
+        .quotes-section {
+            background: var(--white);
+        }
+
+        .quote-box {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            border: 1px solid rgba(91, 155, 213, 0.1);
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .quote-text {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 24px;
+            color: var(--dark-brown);
+            line-height: 1.8;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .quote-emoji {
+            font-size: 48px;
+            margin-top: 16px;
+        }
+
+        .quote-nav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .quote-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--soft-orange);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .quote-dot.active {
+            background: var(--orange);
+            transform: scale(1.4);
+        }
+
+        /* ========== 页脚 ========== */
+        .footer {
+            background: var(--light-yellow);
+            color: var(--dark-brown);
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(91, 155, 213, 0.1);
+        }
+
+        .footer .paw-trail {
+            font-size: 24px;
+            margin-bottom: 12px;
+            letter-spacing: 8px;
+        }
+
+        .footer h3 {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .footer p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* ========== 回到顶部 ========== */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--orange), var(--deep-orange));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(91, 155, 213, 0.4);
+            z-index: 50;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .back-to-top.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-4px) scale(1.1);
+        }
+
+        /* ========== 移动端响应 ========== */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 40px; }
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .interact-grid { grid-template-columns: 1fr; max-width: 320px; margin: 0 auto; }
+            .traits-grid { grid-template-columns: 1fr; }
+            .hero-stats { gap: 20px; }
+            .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 32px; }
+            .section { padding: 30px 16px; }
+            .profile-card { padding: 24px; }
+            .avatar-ring { width: 140px; height: 140px; }
+            .avatar-inner { width: 128px; height: 128px; }
+            .avatar-inner svg { width: 105px; height: 105px; }
+        }
+
+        /* ========== 图片查看器 ========== */
+        .image-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+        }
+
+        .image-viewer.show {
+            display: flex;
+        }
+
+        .image-viewer img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Toast 提示 */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 14px 28px;
+            border-radius: 50px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+            border: 2px solid var(--orange);
+            font-size: 15px;
+            color: var(--dark-brown);
+            z-index: 1500;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-family: 'ZCOOL KuaiLe', cursive;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ========== 登录/注册弹窗 ========== */
+        .auth-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        .auth-overlay.show { display: flex; }
+
+        .auth-modal {
+            background: white;
+            border-radius: 28px;
+            padding: 40px 36px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,159,67,0.15);
+            animation: popupIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            position: relative;
+        }
+        .auth-modal .close-auth {
+            position: absolute;
+            top: 16px; right: 20px;
+            background: none; border: none;
+            font-size: 22px; cursor: pointer;
+            color: #ccc;
+            transition: color 0.2s;
+        }
+        .auth-modal .close-auth:hover { color: #999; }
+
+        .auth-modal .auth-icon { font-size: 56px; margin-bottom: 12px; }
+        .auth-modal h2 {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 26px;
+            color: var(--deep-orange);
+            margin-bottom: 6px;
+        }
+        .auth-modal .auth-sub {
+            font-size: 13px; color: var(--warm-brown);
+            margin-bottom: 24px;
+        }
+        .auth-modal .auth-input-group {
+            text-align: left; margin-bottom: 16px;
+        }
+        .auth-modal label {
+            display: block;
+            font-size: 13px; font-weight: 600;
+            color: var(--warm-brown);
+            margin-bottom: 6px;
+        }
+        .auth-modal input[type="text"],
+        .auth-modal input[type="email"],
+        .auth-modal input[type="password"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #B8D4F0;
+            border-radius: 14px;
+            font-size: 15px;
+            font-family: 'Noto Sans SC', sans-serif;
+            color: var(--dark-brown);
+            outline: none;
+            transition: border-color 0.3s;
+            background: var(--cream);
+        }
+        .auth-modal input:focus { border-color: var(--orange); }
+        .auth-modal input::placeholder { color: #ccc; }
+
+        .auth-modal .auth-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--orange), var(--deep-orange));
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'ZCOOL KuaiLe', cursive;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+        .auth-modal .auth-btn:hover { transform: scale(1.03); box-shadow: 0 4px 16px rgba(255,159,67,0.3); }
+        .auth-modal .auth-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .auth-modal .auth-switch {
+            margin-top: 18px;
+            font-size: 14px; color: var(--warm-brown);
+        }
+        .auth-modal .auth-switch a {
+            color: var(--deep-orange);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .auth-modal .auth-switch a:hover { text-decoration: underline; }
+
+        .auth-modal .auth-error {
+            color: #FF6B6B;
+            font-size: 13px;
+            margin-top: 8px;
+            min-height: 18px;
+        }
+
+        /* 用户状态栏 */
+        .user-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-bar .user-avatar {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--orange), var(--pink));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; color: white;
+            border: 2px solid var(--soft-orange);
+        }
+        .user-bar .user-name {
+            font-size: 14px;
+            color: var(--warm-brown);
+            font-weight: 500;
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .user-bar .logout-btn {
+            background: none; border: none;
+            font-size: 13px; cursor: pointer;
+            color: #999;
+            transition: color 0.2s;
+        }
+        .user-bar .logout-btn:hover { color: var(--coral); }
+
+        /* ========== 签到按钮 ========== */
+        .checkin-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 50px;
+            border: 2px solid #A8CCE8;
+            background: linear-gradient(135deg, rgba(255,249,235,0.9), rgba(255,236,179,0.7));
+            color: var(--deep-orange);
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Noto Sans SC', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+        .checkin-btn:hover {
+            border-color: var(--orange);
+            background: linear-gradient(135deg, rgba(255,236,179,0.9), rgba(255,214,153,0.8));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(255,159,67,0.2);
+        }
+        .checkin-btn:active {
+            transform: scale(0.95);
+        }
+        .checkin-btn.checked {
+            background: linear-gradient(135deg, #E8F8F0, #D4F5E9);
+            border-color: #A8E6CF;
+            color: #059669;
+            cursor: default;
+        }
+        .checkin-btn.checked:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        .checkin-btn .checkin-icon {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+        .checkin-btn:not(.checked):hover .checkin-icon {
+            transform: scale(1.2) rotate(-10deg);
+        }
+        .checkin-btn .checkin-days {
+            font-size: 11px;
+            background: rgba(255,159,67,0.15);
+            padding: 1px 6px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        .checkin-btn.checked .checkin-days {
+            background: rgba(5,150,105,0.1);
+        }
+
+        /* 签到成功特效 */
+        .checkin-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            font-size: 24px;
+            animation: checkinFly 1.2s ease-out forwards;
+        }
+        @keyframes checkinFly {
+            0% { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.3) rotate(var(--rot)); }
+        }
+        .checkin-burst {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,159,67,0.4), rgba(255,107,107,0.1), transparent);
+            animation: burstWave 0.8s ease-out forwards;
+        }
+        @keyframes burstWave {
+            0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+        }
+
+        /* 签到成功弹窗 */
+        .checkin-success-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3);
+            z-index: 4000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.2s ease;
+        }
+        .checkin-success-card {
+            background: white;
+            border-radius: 24px;
+            padding: 36px 44px;
+            text-align: center;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            border: 2px solid rgba(255,159,67,0.15);
+            animation: popupIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        .checkin-success-card .checkin-emoji {
+            font-size: 56px;
+            margin-bottom: 12px;
+            animation: checkinEmojiBounce 0.6s ease;
+        }
+        @keyframes checkinEmojiBounce {
+            0% { transform: scale(0) rotate(-20deg); }
+            50% { transform: scale(1.3) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .checkin-success-card h3 {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 22px;
+            color: var(--deep-orange);
+            margin-bottom: 6px;
+        }
+        .checkin-success-card p {
+            font-size: 14px;
+            color: var(--warm-brown);
+            margin-bottom: 18px;
+        }
+        .checkin-success-card .streak-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 20px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #E8F0FA, #C5DDEF);
+            border: 2px solid #A8CCE8;
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 16px;
+            color: var(--deep-orange);
+            margin-bottom: 18px;
+        }
+        .checkin-success-card button {
+            padding: 10px 32px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(135deg, var(--orange), var(--deep-orange));
+            color: white;
+            font-size: 15px;
+            font-family: 'Noto Sans SC', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .checkin-success-card button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(255,159,67,0.3);
+        }
+        .nav-auth-btn {
+            background: linear-gradient(135deg, var(--orange), var(--deep-orange));
+            color: white !important;
+            border: none !important;
+            padding: 6px 18px !important;
+            border-radius: 50px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+        }
+        .nav-auth-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 12px rgba(255,159,67,0.3) !important;
+            border-color: transparent !important;
+            background: linear-gradient(135deg, var(--deep-orange), var(--orange)) !important;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- 漂浮装饰 -->
+<div class="floating-deco" style="left:3%; animation-duration:14s; animation-delay:0s;">🐾</div>
+<div class="floating-deco" style="left:12%; animation-duration:18s; animation-delay:2s;">🐟</div>
+<div class="floating-deco" style="left:25%; animation-duration:12s; animation-delay:5s;">🐾</div>
+<div class="floating-deco" style="left:40%; animation-duration:16s; animation-delay:1s;">✨</div>
+<div class="floating-deco" style="left:55%; animation-duration:13s; animation-delay:3s;">🐾</div>
+<div class="floating-deco" style="left:68%; animation-duration:17s; animation-delay:6s;">❤️</div>
+<div class="floating-deco" style="left:80%; animation-duration:11s; animation-delay:4s;">🐾</div>
+<div class="floating-deco" style="left:92%; animation-duration:15s; animation-delay:7s;">🌟</div>
+
+<!-- 互动特效层 -->
+<div class="effect-layer" id="effectLayer"></div>
+
+<!-- 图片查看器 -->
+<div class="image-viewer" id="imageViewer" onclick="closeViewer()">
+    <img id="viewerImg" src="" alt="查看大图">
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- 登录/注册弹窗 -->
+<div class="auth-overlay" id="authOverlay" onclick="if(event.target===this)closeAuth()">
+    <div class="auth-modal">
+        <button class="close-auth" onclick="closeAuth()">✕</button>
+        <!-- 登录表单 -->
+        <div id="loginForm">
+            <div class="auth-icon">🐱</div>
+            <h2>欢迎回来喵～</h2>
+            <p class="auth-sub">登录瑶瑶的小窝，分享你的照片</p>
+            <div class="auth-input-group">
+                <label>📧 邮箱</label>
+                <input type="email" id="loginEmail" placeholder="请输入邮箱">
+            </div>
+            <div class="auth-input-group">
+                <label>🔑 密码</label>
+                <input type="password" id="loginPassword" placeholder="请输入密码">
+            </div>
+            <button class="auth-btn" id="loginBtn" onclick="handleLogin()">登 录</button>
+            <div class="auth-error" id="loginError"></div>
+            <div class="auth-switch">还没有账号？<a onclick="switchToRegister()">立即注册</a></div>
+        </div>
+        <!-- 注册表单 -->
+        <div id="registerForm" style="display:none;">
+            <div class="auth-icon">🐾</div>
+            <h2>加入瑶瑶家族！</h2>
+            <p class="auth-sub">注册账号，上传你的猫咪照片</p>
+            <div class="auth-input-group">
+                <label>😊 昵称</label>
+                <input type="text" id="regName" placeholder="给自己取个可爱的名字">
+            </div>
+            <div class="auth-input-group">
+                <label>📧 邮箱</label>
+                <input type="email" id="regEmail" placeholder="请输入邮箱">
+            </div>
+            <div class="auth-input-group">
+                <label>🔑 密码</label>
+                <input type="password" id="regPassword" placeholder="至少6位密码">
+            </div>
+            <button class="auth-btn" id="regBtn" onclick="handleRegister()">注 册</button>
+            <div class="auth-error" id="regError"></div>
+            <div class="auth-switch">已有账号？<a onclick="switchToLogin()">去登录</a></div>
+        </div>
+    </div>
+</div>
+
+<!-- 导航栏 -->
+<nav class="navbar" id="navbar">
+    <div class="logo">🐱 瑶瑶的小窝</div>
+    <ul class="nav-links">
+        <li><a href="#about">关于瑶瑶</a></li>
+        <li><a href="#interact">互动</a></li>
+        <li><a href="#gallery">相册</a></li>
+        <li><a class="nav-auth-btn" id="navAuthBtn" href="javascript:void(0)" onclick="openAuth()">登录</a></li>
+    </ul>
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+</nav>
+
+<div class="main-content">
+
+    <!-- ========== Hero ========== -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="avatar-container">
+                <div class="avatar-ring">
+                    <div class="avatar-inner">
+                        <img src="photos/yaoyao-avatar.png" alt="瑶瑶" style="width:140px;height:140px;object-fit:cover;border-radius:50%;">
+                    </div>
+                </div>
+            </div>
+            <h1>瑶瑶</h1>
+            <p class="tagline">· 佛系小天使 · 粘人小甜心 · 安静美人猫 ·</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-num" id="ageDisplay">加载中</div>
+                    <div class="stat-label">年龄</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">♀</div>
+                    <div class="stat-label">女孩子</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">彩狸</div>
+                    <div class="stat-label">品种</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">🐱</div>
+                    <div class="stat-label">2025.06.01生</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 关于瑶瑶 ========== -->
+    <section class="section" id="about">
+        <div class="section-header">
+            <h2>📋 瑶瑶的档案</h2>
+            <p>一只安静乖巧的小天使，请认真阅读！</p>
+            <div class="divider"></div>
+        </div>
+        <div class="profile-card">
+            <div class="profile-grid">
+                <div class="profile-item">
+                    <div class="profile-icon">🐱</div>
+                    <div class="profile-label">名字</div>
+                    <div class="profile-value">瑶瑶</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-icon">🎨</div>
+                    <div class="profile-label">品种</div>
+                    <div class="profile-value">英短</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-icon">🎂</div>
+                    <div class="profile-label">生日</div>
+                    <div class="profile-value">2025.03.05</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-icon">💫</div>
+                    <div class="profile-label">星座</div>
+                    <div class="profile-value">♓ 双鱼座</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-icon">.</div>
+                    <div class="profile-label">性别</div>
+                    <div class="profile-value">♀ 小美女</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-icon">🐍</div>
+                    <div class="profile-label">生肖</div>
+                    <div class="profile-value">蛇年宝宝</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-icon">🏠</div>
+                    <div class="profile-label">祖籍</div>
+                    <div class="profile-value">安徽</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-icon">🏙️</div>
+                    <div class="profile-label">现居</div>
+                    <div class="profile-value">上海</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 互动板块 ========== -->
+    <section class="interact-section" id="interact">
+        <div class="section">
+            <div class="section-header">
+                <h2>🎮 来和瑶瑶互动吧！</h2>
+                <p>瑶瑶很乖的，轻轻摸摸就好～</p>
+                <div class="divider"></div>
+            </div>
+
+            <!-- 猫咪智能体 -->
+
+
+            <div class="interact-grid">
+                <!-- 投喂 -->
+                <div class="interact-card feed" onclick="interactFeed(event)">
+                    <div class="interact-img" id="feedImg">
+                        <span>🐟</span>
+                    </div>
+                    <h3>投喂瑶瑶</h3>
+                    <p>瑶瑶来吃饭啦～</p>
+                    <div class="interact-counter">已投喂 <span id="feedCount">0</span> 次</div>
+                </div>
+                <!-- 铲屎 -->
+                <div class="interact-card clean" onclick="interactClean(event)">
+                    <div class="interact-img" id="cleanImg">
+                        <span>🧹</span>
+                    </div>
+                    <h3>给瑶瑶铲屎</h3>
+                    <p>铲屎官的日常～</p>
+                    <div class="interact-counter">已铲屎 <span id="cleanCount">0</span> 次</div>
+                </div>
+                <!-- 抚摸 -->
+                <div class="interact-card pet" onclick="interactPet(event)">
+                    <div class="interact-img" id="petImg">
+                        <span>🤗</span>
+                    </div>
+                    <h3>抚摸瑶瑶</h3>
+                    <p>瑶瑶最喜欢被摸了～</p>
+                    <div class="interact-counter">已抚摸 <span id="petCount">0</span> 次</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 爱好 ========== -->
+    <section class="section hobby-section">
+        <div class="section-header">
+            <h2>❤️ 瑶瑶的爱好</h2>
+            <p>每一项都是瑶瑶的日常</p>
+            <div class="divider"></div>
+        </div>
+        <div class="hobby-tags">
+            <span class="hobby-tag">🛋️ 睡懒觉</span>
+            <span class="hobby-tag">🧸 抱抱贴贴</span>
+            <span class="hobby-tag">👀 安静观察</span>
+            <span class="hobby-tag">🧘 发呆冥想</span>
+            <span class="hobby-tag">🐱 粘着主人</span>
+            <span class="hobby-tag">🪥 安静舔毛</span>
+        </div>
+    </section>
+
+    <!-- ========== 优缺点 ========== -->
+    <section class="section">
+        <div class="section-header">
+            <h2>⭐ 优缺点评定</h2>
+            <p>由瑶瑶本人亲自认定</p>
+            <div class="divider"></div>
+        </div>
+        <div class="traits-grid">
+            <div class="trait-box pros">
+                <h3>✨ 优点</h3>
+                <div class="trait-tags">
+                    <span class="trait-tag pro">🧘 佛系淡定</span>
+                    <span class="trait-tag pro">💖 粘人撒娇</span>
+                    <span class="trait-tag pro">😇 温柔安静</span>
+                    <span class="trait-tag pro">🌙 优雅美丽</span>
+                </div>
+            </div>
+            <div class="trait-box cons">
+                <h3>😅 缺点</h3>
+                <div class="trait-tags">
+                    <span class="trait-tag con">👑 没有缺点！</span>
+                    <span class="trait-tag con">💪 完美无瑕！</span>
+                    <span class="trait-tag con">🎀 仙女本仙！</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 相册 ========== -->
+    <section class="gallery-section" id="gallery">
+        <div class="section">
+            <div class="section-header">
+                <h2>📸 瑶瑶的相册</h2>
+                <p>每一张都是绝美大片！</p>
+                <div class="divider"></div>
+            </div>
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- 照片卡片1 -->
+                <div class="gallery-item">
+                    <img src="photos/9c44b507c538835f4a8c8fd6063fa072.jpg" alt="安静美瑶瑶" onclick="openViewer(this.src)">
+                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
+                    <div class="gallery-caption">
+                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
+                        <h4>安静美瑶瑶</h4>
+                        <p>"在阳光下安静地打盹，是瑶瑶最喜欢的日常～"</p>
+                    </div>
+                </div>
+                <!-- 照片卡片2 -->
+                <div class="gallery-item">
+                    <img src="photos/6f5a41b2368b4404a9c267db586927c8.jpg" alt="温柔小甜心" onclick="openViewer(this.src)">
+                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
+                    <div class="gallery-caption">
+                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
+                        <h4>温柔小甜心</h4>
+                        <p>"瑶瑶今天心情很好，批准你摸摸头～"</p>
+                    </div>
+                </div>
+                <!-- 照片卡片3 -->
+                <div class="gallery-item">
+                    <img src="photos/60c002a3c53b783ffc6f45c5df34324d.jpg" alt="佛系日常" onclick="openViewer(this.src)">
+                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
+                    <div class="gallery-caption">
+                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
+                        <h4>佛系日常</h4>
+                        <p>"不争不抢，安安静静做自己最好～"</p>
+                    </div>
+                </div>
+                <!-- 照片卡片4 -->
+                <div class="gallery-item">
+                    <img src="photos/证件照.jpg" alt="粘人时刻" onclick="openViewer(this.src)">
+                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
+                    <div class="gallery-caption">
+                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
+                        <h4>粘人时刻</h4>
+                        <p>"靠在主人身边，就是最幸福的时刻～"</p>
+                    </div>
+                </div>
+                <!-- 照片卡片5 -->
+                <div class="gallery-item">
+                    <img src="photos/b7e759b96e23bb0d8976714e676107bb.jpg" alt="优雅睡姿" onclick="openViewer(this.src)">
+                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
+                    <div class="gallery-caption">
+                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
+                        <h4>优雅睡姿</h4>
+                        <p>"瑶瑶的睡姿永远是这么优雅～"</p>
+                    </div>
+                </div>
+                <!-- 照片卡片6 -->
+                <div class="gallery-item">
+                    <img src="photos/3c6b1dd013766683b5c516f712bbf953.jpg" alt="发呆中" onclick="openViewer(this.src)">
+                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
+                    <div class="gallery-caption">
+                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
+                        <h4>发呆中</h4>
+                        <p>"在想什么呢？大概在想下次什么时候抱抱～"</p>
+                    </div>
+                </div>
+                <!-- 照片卡片7 -->
+                <div class="gallery-item">
+                    <img src="photos/35c673c491a6241e8d11b670469d1528.jpg" alt="萌萌哒" onclick="openViewer(this.src)">
+                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
+                    <div class="gallery-caption">
+                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
+                        <h4>萌萌哒</h4>
+                        <p>"不经意间的一个回眸，美到犯规！"</p>
+                    </div>
+                </div>
+                <!-- 照片卡片8 -->
+                <div class="gallery-item">
+                    <img src="photos/60e24b9d935750dd1728809b46b7a15a.jpg" alt="阳光浴" onclick="openViewer(this.src)">
+                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
+                    <div class="gallery-caption">
+                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
+                        <h4>阳光浴</h4>
+                        <p>"晒太阳是每天最重要的功课～"</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 用户上传照片 - 时间轴 -->
+            <div class="user-timeline" id="userTimeline">
+                <!-- 时间轴内容由 JS 动态渲染 -->
+            </div>
+            <!-- 上传照片入口 -->
+            <div class="timeline-upload-card" id="addPhotoCard" onclick="triggerUpload()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+                <div class="timeline-upload-icon">📷</div>
+                <p>上传新照片</p>
+                <span>点击或拖拽图片到这里</span>
+            </div>
+            <input type="file" class="upload-input" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
+        </div>
+        <!-- 上传文字输入浮层 -->
+        <div class="caption-float" id="captionFloat">
+            <input type="text" id="captionText" placeholder="给照片配一句可爱的文字..." maxlength="50">
+            <button onclick="confirmUpload(event)">✅ 确认</button>
+        </div>
+    </section>
+
+
+    <!-- ========== 瑶瑶语录 ========== -->
+    <section class="quotes-section section">
+        <div class="section-header">
+            <h2>💭 瑶瑶语录</h2>
+            <p>来自瑶瑶本人的心声</p>
+            <div class="divider"></div>
+        </div>
+        <div class="quote-box">
+            <div class="quote-text" id="quoteText">本喵最乖了，铲屎官要好好爱我哦～</div>
+            <div class="quote-emoji" id="quoteEmoji">😸</div>
+            <div class="quote-nav" id="quoteNav"></div>
+        </div>
+    </section>
+
+</div>
+
+<!-- 页脚 -->
+<footer class="footer">
+    <div class="paw-trail">🐾 🐾 🐾 🐾</div>
+    <h3>瑶瑶的小窝</h3>
+    <p>© 2025-2026 瑶瑶帝国 · 保留所有猫权 · 喵～</p>
+    <p style="margin-top: 8px; font-size: 12px; opacity: 0.7;">用爱与温柔搭建 💙</p>
+</footer>
+
+<!-- 回到顶部 -->
+<button class="back-to-top" id="backToTop" onclick="scrollToTop()">🐱</button>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    // ==================== Supabase 配置 ====================
+    const SUPABASE_URL = 'https://dfwtbcyojyoixbgvvrjb.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRmd3RiY3lvanlvaXhiZ3Z2cmpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NzUzNTksImV4cCI6MjA5MjM1MTM1OX0.QENCB7xoBvc-R3lruNk6qDhJ-CVEEvXCBwPfS2fhLfg';
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentUser = null; // { email, name, id }
+
+    // ==================== 年龄计算 ====================
+    function calcAge() {
+        const birth = new Date(2025, 2, 5);
+        const now = new Date();
+        if (now < birth) { document.getElementById('ageDisplay').textContent = '还没出生'; return; }
+        let years = now.getFullYear() - birth.getFullYear();
+        let months = now.getMonth() - birth.getMonth();
+        let days = now.getDate() - birth.getDate();
+        if (days < 0) months--;
+        if (months < 0) { years--; months += 12; }
+        const totalMonths = years * 12 + months;
+        const el = document.getElementById('ageDisplay');
+        if (years >= 1) {
+            el.textContent = years + '岁' + (months > 0 ? months + '个月' : '');
+        } else {
+            el.textContent = totalMonths + '个月' + (days >= 0 ? days + '天' : '');
+        }
+    }
+    calcAge();
+
+    // ==================== 互动系统 ====================
+    let feedCount = 0, cleanCount = 0, petCount = 0;
+
+    // 从localStorage读取
+    const saved = JSON.parse(localStorage.getItem('yaoyaoInteract') || '{}');
+    feedCount = saved.feed || 0;
+    cleanCount = saved.clean || 0;
+    petCount = saved.pet || 0;
+    updateCounters();
+
+    function updateCounters() {
+        const feedEl = document.getElementById('feedCount');
+        const cleanEl = document.getElementById('cleanCount');
+        const petEl = document.getElementById('petCount');
+        feedEl.textContent = feedCount;
+        cleanEl.textContent = cleanCount;
+        petEl.textContent = petCount;
+        localStorage.setItem('yaoyaoInteract', JSON.stringify({ feed: feedCount, clean: cleanCount, pet: petCount }));
+    }
+
+    // 计数器跳动动画
+    function animateCounter(id) {
+        const counter = document.getElementById(id).parentElement;
+        counter.classList.remove('bump');
+        void counter.offsetWidth;
+        counter.classList.add('bump');
+        setTimeout(() => counter.classList.remove('bump'), 400);
+    }
+
+    // 投喂
+    function interactFeed(e) {
+        feedCount++;
+        updateCounters();
+        animateCounter('feedCount');
+        const emojis = ['🐟', '🥫', '🍖', '🐔', '🧶', '🥛', '😋', '🤤'];
+        const texts = [
+            { emoji: '😋', text: '谢谢铲屎官！瑶瑶吃饱了～', sub: '瑶瑶的幸福值 +100' },
+            { emoji: '🤤', text: '嗯...这个味道瑶瑶喜欢～', sub: '瑶瑶给你五星好评' },
+            { emoji: '😸', text: '瑶瑶吃得很优雅哦～', sub: '瑶瑶开心到转圈圈' },
+            { emoji: '😻', text: '谢谢你给瑶瑶准备的美味～', sub: '瑶瑶很满意' },
+            { emoji: '😋', text: '瑶瑶吃饱了...再吃一点也可以...', sub: '瑶瑶优雅地吃完了' },
+            { emoji: '😸', text: '今天的饭饭真好吃！瑶瑶很开心～', sub: '瑶瑶吃饱饱了' },
+        ];
+        shakeCard(e.currentTarget);
+        spawnParticles(e, emojis, ['#FF9F43', '#A8CCE8', '#FF6B6B']);
+        for (let i = 0; i < 3; i++) {
+            setTimeout(() => spawnFoodDrop(e), i * 200);
+        }
+        showCatResponse(texts[Math.floor(Math.random() * texts.length)]);
+
+    }
+
+    // 铲屎
+    function interactClean(e) {
+        cleanCount++;
+        updateCounters();
+        animateCounter('cleanCount');
+        const emojis = ['💩', '🧹', '🪣', '✨', '💨', '🧼'];
+        const texts = [
+            { emoji: '😏', text: '嗯...瑶瑶满意了～', sub: '瑶瑶勉强认可' },
+            { emoji: '😸', text: '铲屎官辛苦了，瑶瑶心疼你～', sub: '瑶瑶很温柔' },
+            { emoji: '😽', text: '干净的环境让瑶瑶很安心～', sub: '瑶瑶心情值 +50' },
+            { emoji: '😼', text: '不要嫌弃嘛...瑶瑶也不想的...', sub: '瑶瑶有点不好意思' },
+            { emoji: '😸', text: '快去洗手哦...瑶瑶要干净的铲屎官～', sub: '瑶瑶害羞了' },
+            { emoji: '😏', text: '瑶瑶吃得好，身体才棒棒的～', sub: '瑶瑶很乖巧' },
+        ];
+        shakeCard(e.currentTarget);
+        spawnParticles(e, emojis, ['#98FB98', '#D1FAE5', '#A8CCE8']);
+        for (let i = 0; i < 4; i++) {
+            setTimeout(() => spawnSparkle(e), i * 180);
+        }
+        showCatResponse(texts[Math.floor(Math.random() * texts.length)]);
+
+    }
+
+    // 抚摸
+    function interactPet(e) {
+        petCount++;
+        updateCounters();
+        animateCounter('petCount');
+        const emojis = ['❤️', '💖', '💕', '💗', '💓', '🥰', '✨', '⭐'];
+        const texts = [
+            { emoji: '😻', text: '呼噜呼噜～再摸摸～', sub: '瑶瑶的幸福值已爆表' },
+            { emoji: '🥰', text: '嗯...这里也很舒服...继续～', sub: '瑶瑶很享受' },
+            { emoji: '😸', text: '好了...不要停...再摸一下下...', sub: '瑶瑶假装修止' },
+            { emoji: '😽', text: '瑶瑶只给你摸哦，要珍惜～', sub: '瑶瑶宣布专属权' },
+            { emoji: '😍', text: '你的手好暖...瑶瑶好幸福...', sub: '瑶瑶授予称号' },
+            { emoji: '😻', text: '唔...瑶瑶困了...就靠着你睡一会...', sub: '瑶瑶停不下来' },
+        ];
+        shakeCard(e.currentTarget);
+        spawnParticles(e, emojis, ['#FFB6C1', '#FF69B4', '#FF9F43', '#A8CCE8']);
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => spawnHeart(e), i * 150);
+        }
+        purrEffect(e.currentTarget);
+        showCatResponse(texts[Math.floor(Math.random() * texts.length)]);
+
+    }
+
+    // 粒子特效
+    function spawnParticles(e, emojis, colors) {
+        const layer = document.getElementById('effectLayer');
+        const rect = e.currentTarget.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        for (let i = 0; i < 15; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'effect-particle';
+            particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            const tx = (Math.random() - 0.5) * 300;
+            const ty = -(Math.random() * 250 + 50);
+            const rot = (Math.random() - 0.5) * 720;
+            particle.style.cssText = `left:${cx}px; top:${cy}px; --tx:${tx}px; --ty:${ty}px; --rot:${rot}deg; color:${colors[Math.floor(Math.random() * colors.length)]};`;
+            layer.appendChild(particle);
+            setTimeout(() => particle.remove(), 1500);
+        }
+    }
+
+    function spawnHeart(e) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const heart = document.createElement('div');
+        heart.className = 'heart-burst';
+        heart.textContent = ['❤️', '💖', '💕', '💗', '💓', '🧡', '💛'][Math.floor(Math.random() * 7)];
+        heart.style.cssText = `left:${rect.left + Math.random() * rect.width}px; top:${rect.top + rect.height / 2}px;`;
+        document.getElementById('effectLayer').appendChild(heart);
+        setTimeout(() => heart.remove(), 2000);
+    }
+
+    function spawnFoodDrop(e) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const foods = ['🐟', '🥫', '🍖', '🍗', '🧶', '🥩', '🍚'];
+        const food = document.createElement('div');
+        food.className = 'effect-particle';
+        food.textContent = foods[Math.floor(Math.random() * foods.length)];
+        const startX = rect.left + Math.random() * rect.width;
+        const tx = (Math.random() - 0.5) * 100;
+        const ty = Math.random() * 150 + 100;
+        const rot = (Math.random() - 0.5) * 540;
+        food.style.cssText = `left:${startX}px; top:${rect.top - 20}px; --tx:${tx}px; --ty:${ty}px; --rot:${rot}deg; font-size:28px;`;
+        food.style.animation = 'foodDrop 1.2s ease-in forwards';
+        document.getElementById('effectLayer').appendChild(food);
+        setTimeout(() => food.remove(), 1200);
+    }
+
+    function spawnSparkle(e) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const sparkle = document.createElement('div');
+        sparkle.className = 'effect-particle';
+        sparkle.textContent = ['✨', '⭐', '🌟', '💫', '🧹'][Math.floor(Math.random() * 5)];
+        const startX = rect.left + Math.random() * rect.width;
+        const startY = rect.top + Math.random() * rect.height;
+        const tx = (Math.random() - 0.5) * 200;
+        const ty = -(Math.random() * 180 + 60);
+        const rot = (Math.random() - 0.5) * 360;
+        sparkle.style.cssText = `left:${startX}px; top:${startY}px; --tx:${tx}px; --ty:${ty}px; --rot:${rot}deg; font-size:24px;`;
+        sparkle.style.animation = 'sparkleFly 1s ease-out forwards';
+        document.getElementById('effectLayer').appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 1000);
+    }
+
+    function shakeCard(card) {
+        card.style.animation = 'cardShake 0.5s ease';
+        setTimeout(() => card.style.animation = '', 500);
+    }
+
+    function purrEffect(card) {
+        card.classList.add('purring');
+        setTimeout(() => card.classList.remove('purring'), 2000);
+    }
+
+    function showCatResponse(data) {
+        const existing = document.querySelector('.cat-response');
+        if (existing) existing.remove();
+        const popup = document.createElement('div');
+        popup.className = 'cat-response';
+        popup.innerHTML = `<div class="emoji">${data.emoji}</div><div class="text">${data.text}</div><div class="sub">${data.sub}</div>`;
+        document.body.appendChild(popup);
+        setTimeout(() => {
+            popup.style.animation = 'popupOut 0.3s ease forwards';
+            setTimeout(() => popup.remove(), 300);
+        }, 2000);
+    }
+
+    // ==================== 登录注册系统 ====================
+    function openAuth() {
+        document.getElementById('authOverlay').classList.add('show');
+        switchToLogin();
+    }
+
+    function closeAuth() {
+        document.getElementById('authOverlay').classList.remove('show');
+    }
+
+    function switchToLogin() {
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('loginError').textContent = '';
+        document.getElementById('regError').textContent = '';
+    }
+
+    function switchToRegister() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+        document.getElementById('loginError').textContent = '';
+        document.getElementById('regError').textContent = '';
+    }
+
+    async function handleLogin() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const errEl = document.getElementById('loginError');
+        const btn = document.getElementById('loginBtn');
+        if (!email || !password) { errEl.textContent = '请填写邮箱和密码'; return; }
+        btn.disabled = true; btn.textContent = '登录中...'; errEl.textContent = '';
+        try {
+            const { data, error } = await sb.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+            currentUser = { email: data.user.email, name: data.user.user_metadata?.nickname || email.split('@')[0], id: data.user.id };
+            localStorage.setItem('yaoyaoUser', JSON.stringify(currentUser));
+            updateAuthUI();
+            closeAuth();
+            showToast('🐱 欢迎回来，' + currentUser.name + '！');
+        } catch(e) {
+            errEl.textContent = e.message === 'Invalid login credentials' ? '邮箱或密码错误' : e.message;
+        }
+        btn.disabled = false; btn.textContent = '登 录';
+    }
+
+    async function handleRegister() {
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const errEl = document.getElementById('regError');
+        const btn = document.getElementById('regBtn');
+        if (!name || !email || !password) { errEl.textContent = '请填写所有信息'; return; }
+        if (password.length < 6) { errEl.textContent = '密码至少6位'; return; }
+        btn.disabled = true; btn.textContent = '注册中...'; errEl.textContent = '';
+        try {
+            const { data, error } = await sb.auth.signUp({
+                email, password,
+                options: { data: { nickname: name } }
+            });
+            if (error) throw error;
+            if (data.user && !data.session) {
+                errEl.textContent = '';
+                document.getElementById('registerForm').innerHTML = `
+                    <div class="auth-icon">📧</div>
+                    <h2>注册成功！</h2>
+                    <p class="auth-sub">请去你的邮箱查看验证邮件，点击里面的链接激活账号，然后回来登录～</p>
+                    <button class="auth-btn" onclick="switchToLogin();restoreRegForm();">去登录</button>
+                `;
+            } else if (data.session) {
+                currentUser = { email: data.user.email, name: name, id: data.user.id };
+                localStorage.setItem('yaoyaoUser', JSON.stringify(currentUser));
+                updateAuthUI();
+                closeAuth();
+                showToast('🎉 注册成功！欢迎，' + name + '！');
+            }
+        } catch(e) {
+            errEl.textContent = e.message.includes('already registered') ? '这个邮箱已经注册过了' : e.message;
+        }
+        btn.disabled = false; btn.textContent = '注 册';
+    }
+
+    function restoreRegForm() {
+        document.getElementById('registerForm').innerHTML = `
+            <div class="auth-icon">🐾</div>
+            <h2>加入瑶瑶家族！</h2>
+            <p class="auth-sub">注册账号，上传你的猫咪照片</p>
+            <div class="auth-input-group"><label>😊 昵称</label><input type="text" id="regName" placeholder="给自己取个可爱的名字"></div>
+            <div class="auth-input-group"><label>📧 邮箱</label><input type="email" id="regEmail" placeholder="请输入邮箱"></div>
+            <div class="auth-input-group"><label>🔑 密码</label><input type="password" id="regPassword" placeholder="至少6位密码"></div>
+            <button class="auth-btn" id="regBtn" onclick="handleRegister()">注 册</button>
+            <div class="auth-error" id="regError"></div>
+            <div class="auth-switch">已有账号？<a onclick="switchToLogin()">去登录</a></div>
+        `;
+    }
+
+    function updateAuthUI() {
+        const navBtn = document.getElementById('navAuthBtn');
+        if (currentUser) {
+            const initial = currentUser.name.charAt(0).toUpperCase();
+            navBtn.outerHTML = `
+                <div class="user-bar" id="userBar">
+                    <button class="checkin-btn" id="checkinBtn" onclick="handleCheckin(event)">
+                        <span class="checkin-icon">🐾</span>
+                        <span id="checkinText">签到</span>
+                        <span class="checkin-days" id="checkinDays">0天</span>
+                    </button>
+                    <div class="user-avatar">${initial}</div>
+                    <span class="user-name">${currentUser.name}</span>
+                    <button class="logout-btn" onclick="handleLogout()">退出</button>
+                </div>
+            `;
+            loadCheckinStatus();
+        } else {
+            const bar = document.getElementById('userBar');
+            if (bar) {
+                bar.outerHTML = `<a class="nav-auth-btn" id="navAuthBtn" href="javascript:void(0)" onclick="openAuth()">登录</a>`;
+            }
+        }
+    }
+
+    async function handleLogout() {
+        await sb.auth.signOut();
+        currentUser = null;
+        localStorage.removeItem('yaoyaoUser');
+        updateAuthUI();
+        showToast('👋 已退出登录');
+    }
+
+    // 检查已登录状态
+    async function checkSession() {
+        try {
+            const { data: { session } } = await sb.auth.getSession();
+            if (session) {
+                currentUser = { email: session.user.email, name: session.user.user_metadata?.nickname || session.user.email.split('@')[0], id: session.user.id };
+                localStorage.setItem('yaoyaoUser', JSON.stringify(currentUser));
+                updateAuthUI();
+            }
+        } catch(e) {}
+    }
+    checkSession();
+
+    // ==================== 每日签到系统 ====================
+    const CHECKIN_TABLE = 'check_ins';
+
+    // 获取今天的日期字符串 (YYYY-MM-DD)
+    function getTodayStr() {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    }
+
+    // 加载签到状态
+    async function loadCheckinStatus() {
+        if (!currentUser) return;
+        try {
+            const { data, error } = await sb
+                .from(CHECKIN_TABLE)
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .single();
+
+            if (error && error.code !== 'PGRST116') {
+                console.log('加载签到状态失败:', error);
+                return;
+            }
+
+            const btn = document.getElementById('checkinBtn');
+            const textEl = document.getElementById('checkinText');
+            const daysEl = document.getElementById('checkinDays');
+            if (!btn) return;
+
+            if (data) {
+                const totalDays = data.total_days || 0;
+                const lastDate = data.last_checkin || '';
+                const today = getTodayStr();
+
+                daysEl.textContent = totalDays + '天';
+
+                if (lastDate === today) {
+                    // 今天已经签到
+                    btn.classList.add('checked');
+                    textEl.textContent = '已签到';
+                    btn.querySelector('.checkin-icon').textContent = '✅';
+                } else {
+                    textEl.textContent = '签到';
+                    btn.querySelector('.checkin-icon').textContent = '🐾';
+                }
+            } else {
+                daysEl.textContent = '0天';
+                textEl.textContent = '签到';
+                btn.querySelector('.checkin-icon').textContent = '🐾';
+            }
+        } catch(e) {
+            console.log('签到状态加载异常:', e);
+        }
+    }
+
+    // 执行签到
+    async function handleCheckin(e) {
+        e.stopPropagation();
+        if (!currentUser) return;
+
+        const btn = document.getElementById('checkinBtn');
+        if (!btn || btn.classList.contains('checked')) return;
+
+        try {
+            // 先检查今天的签到状态
+            const { data: existing } = await sb
+                .from(CHECKIN_TABLE)
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .single();
+
+            const today = getTodayStr();
+
+            if (existing && existing.last_checkin === today) {
+                showToast('🐱 今天已经签到过啦～');
+                return;
+            }
+
+            let newDays = 1;
+            if (existing) {
+                // 计算连续签到
+                const last = new Date(existing.last_checkin);
+                const now = new Date(today);
+                const diffDays = Math.round((now - last) / 86400000);
+                if (diffDays === 1) {
+                    newDays = (existing.total_days || 0) + 1;
+                } else if (diffDays > 1) {
+                    newDays = 1; // 断签，重新计数
+                } else {
+                    newDays = existing.total_days || 1;
+                }
+            }
+
+            // Upsert 签到记录
+            const { error } = await sb
+                .from(CHECKIN_TABLE)
+                .upsert({
+                    user_id: currentUser.id,
+                    user_name: currentUser.name,
+                    last_checkin: today,
+                    total_days: newDays
+                }, { onConflict: 'user_id' });
+
+            if (error) {
+                // 表可能不存在，提示用户创建
+                if (error.message && error.message.includes('does not exist')) {
+                    showToast('⚠️ 签到表未创建，请联系管理员');
+                    return;
+                }
+                throw error;
+            }
+
+            // 更新按钮状态
+            btn.classList.add('checked');
+            document.getElementById('checkinText').textContent = '已签到';
+            btn.querySelector('.checkin-icon').textContent = '✅';
+            document.getElementById('checkinDays').textContent = newDays + '天';
+
+            // 触发签到特效
+            spawnCheckinParticles(e.clientX, e.clientY);
+            spawnCheckinBurst(e.clientX, e.clientY);
+
+            // 显示签到成功弹窗
+            showCheckinSuccess(newDays);
+
+        } catch(err) {
+            console.error('签到失败:', err);
+            showToast('❌ 签到失败，请重试');
+        }
+    }
+
+    // 签到成功弹窗
+    function showCheckinSuccess(days) {
+        const messages = [
+            '瑶瑶给你盖章啦～',
+            '今日份的温柔已送达！',
+            '签到成功，瑶瑶很开心！',
+            '连续签到，瑶瑶越来越爱你！',
+            '坚持签到，瑶瑶会给你暖暖心！',
+        ];
+        const streakMsgs = days >= 30 ? '🏆 你是瑶瑶的超级粉丝！' :
+                           days >= 7 ? '🌟 连续一周啦，太棒了！' :
+                           days >= 3 ? '🔥 连续签到中，保持住！' : '';
+
+        const msg = messages[Math.floor(Math.random() * messages.length)];
+        const emoji = days >= 30 ? '👑' : days >= 7 ? '🎉' : days >= 3 ? '⭐' : '🐾';
+
+        const overlay = document.createElement('div');
+        overlay.className = 'checkin-success-overlay';
+        overlay.onclick = () => overlay.remove();
+        overlay.innerHTML = `
+            <div class="checkin-success-card" onclick="event.stopPropagation()">
+                <div class="checkin-emoji">${emoji}</div>
+                <h3>签到成功！</h3>
+                <p>${msg}</p>
+                <div class="streak-badge">🔥 已连续签到 ${days} 天</div>
+                ${streakMsgs ? `<p style="color:var(--deep-orange);font-weight:600;font-size:15px;margin-bottom:14px;">${streakMsgs}</p>` : ''}
+                <button onclick="this.closest('.checkin-success-overlay').remove()">好的～</button>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        // 3秒后自动关闭
+        setTimeout(() => {
+            if (overlay.parentElement) {
+                overlay.style.opacity = '0';
+                overlay.style.transition = 'opacity 0.3s';
+                setTimeout(() => overlay.remove(), 300);
+            }
+        }, 3000);
+    }
+
+    // 签到粒子特效
+    function spawnCheckinParticles(x, y) {
+        const particles = ['🐾', '✨', '💕', '⭐', '🌸', '🐱', '💖', '🌟'];
+        const count = 12;
+        for (let i = 0; i < count; i++) {
+            const p = document.createElement('div');
+            p.className = 'checkin-particle';
+            p.textContent = particles[Math.floor(Math.random() * particles.length)];
+            const angle = (Math.PI * 2 / count) * i + (Math.random() - 0.5) * 0.5;
+            const dist = 60 + Math.random() * 80;
+            p.style.left = x + 'px';
+            p.style.top = y + 'px';
+            p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+            p.style.setProperty('--ty', Math.sin(angle) * dist - 40 + 'px');
+            p.style.setProperty('--rot', (Math.random() * 360 - 180) + 'deg');
+            p.style.fontSize = (18 + Math.random() * 14) + 'px';
+            p.style.animationDelay = (Math.random() * 0.15) + 's';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 1400);
+        }
+    }
+
+    // 签到冲击波特效
+    function spawnCheckinBurst(x, y) {
+        const burst = document.createElement('div');
+        burst.className = 'checkin-burst';
+        burst.style.left = x + 'px';
+        burst.style.top = y + 'px';
+        document.body.appendChild(burst);
+        setTimeout(() => burst.remove(), 900);
+    }
+
+    // ==================== 云端照片系统（Supabase） ====================
+    let pendingFile = null;
+
+    function triggerUpload() {
+        if (!currentUser) {
+            showToast('🐱 请先登录再上传照片哦～');
+            openAuth();
+            return;
+        }
+        document.getElementById('fileInput').click();
+    }
+
+    function handleFileSelect(e) {
+        const file = e.target.files[0];
+        if (file) {
+            pendingFile = file;
+            showCaptionFloat();
+        }
+    }
+
+    const cuteTitles = [
+        '瑶瑶的可爱瞬间', '今日份瑶瑶', '瑶瑶营业中', '瑶瑶的日常碎片',
+        '瑶瑶的私房照', '瑶瑶又在卖萌', '瑶瑶的自拍时间', '瑶瑶的日记本',
+        '瑶瑶的闪光时刻', '瑶瑶的快乐时光', '瑶瑶的撒娇日常', '瑶瑶的午后时光',
+    ];
+
+    function getRandomTitle() {
+        return cuteTitles[Math.floor(Math.random() * cuteTitles.length)];
+    }
+
+    // 压缩图片为 base64
+    function compressImage(file, maxWidth, quality) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let w = img.width, h = img.height;
+                    if (w > maxWidth) { h = h * maxWidth / w; w = maxWidth; }
+                    canvas.width = w;
+                    canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    resolve(canvas.toDataURL('image/jpeg', quality));
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // 确认上传（Supabase版）
+    async function confirmUpload(e) {
+        e.stopPropagation();
+        if (!pendingFile) return;
+        const caption = document.getElementById('captionText').value.trim() || getRandomTitle();
+        const float = document.getElementById('captionFloat');
+        const uploadBtn = float.querySelector('button');
+        const origText = uploadBtn.innerHTML;
+        uploadBtn.innerHTML = '⏳ 上传中...';
+        uploadBtn.disabled = true;
+
+        try {
+            // 压缩图片
+            const base64 = await compressImage(pendingFile, 1200, 0.75);
+            // 保存到 Supabase 数据库（带时间戳）
+            const { data, error } = await sb
+                .from('photos')
+                .insert({
+                    caption: caption,
+                    image_data: base64,
+                    uploader_name: currentUser.name,
+                    uploader_id: currentUser.id,
+                    photo_time: new Date().toISOString()
+                })
+                .select()
+                .single();
+
+            if (error) throw error;
+
+            // 立即在页面显示
+            renderTimeline();
+            showToast('📸 照片上传成功！大家都能看到了～');
+        } catch(err) {
+            console.error('上传失败:', err);
+            if (err.message && err.message.includes('does not exist')) {
+                showToast('⚠️ 数据表还未创建，请先在 Supabase 运行 SQL');
+            } else {
+                showToast('❌ 上传失败，请重试');
+            }
+        }
+
+        pendingFile = null;
+        document.getElementById('captionText').value = '';
+        float.classList.remove('show');
+        document.getElementById('fileInput').value = '';
+        uploadBtn.innerHTML = origText;
+        uploadBtn.disabled = false;
+    }
+
+    const cuteDescs = [
+        '今天又是安静乖巧的一天～',
+        '本喵在认真地想人生大事...',
+        '偷拍本喵？好吧，就这一次...',
+        '自然美才是真的美～',
+        '心情很好，批准你摸摸头～',
+        '看什么看...好吧，可以多看两眼...',
+        '这是瑶瑶帝国的官方写真集～',
+        '铲屎官拍的还行吧...勉强及格',
+        '正在发呆...在想什么？不告诉你...',
+        '瑶瑶的盛世美颜营业中～',
+        '你可以保存这张照片...记得想我',
+        '低调一点啦，本喵比较害羞...',
+    ];
+
+    function getRandomDesc() {
+        return cuteDescs[Math.floor(Math.random() * cuteDescs.length)];
+    }
+
+    function showCaptionFloat() {
+        const float = document.getElementById('captionFloat');
+        float.classList.add('show');
+        document.getElementById('captionText').focus();
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        document.getElementById('addPhotoCard').classList.add('dragover');
+    }
+
+    function handleDragLeave(e) {
+        e.preventDefault();
+        document.getElementById('addPhotoCard').classList.remove('dragover');
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        document.getElementById('addPhotoCard').classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            if (!currentUser) {
+                showToast('🐱 请先登录再上传照片哦～');
+                openAuth();
+                return;
+            }
+            pendingFile = file;
+            showCaptionFloat();
+        }
+    }
+
+    // ==================== 时间轴渲染 ====================
+
+    // 格式化日期为友好显示
+    function formatDate(dateStr) {
+        const d = new Date(dateStr);
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const target = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        const diff = today - target;
+
+        if (diff === 0) return '今天';
+        if (diff === 86400000) return '昨天';
+        if (diff === 86400000 * 2) return '前天';
+
+        const month = d.getMonth() + 1;
+        const day = d.getDate();
+        const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+        const weekday = weekdays[d.getDay()];
+
+        // 今年的不显示年份
+        if (d.getFullYear() === now.getFullYear()) {
+            return `${month}月${day}日 周${weekday}`;
+        }
+        return `${d.getFullYear()}年${month}月${day}日`;
+    }
+
+    // 格式化时间（小时:分钟）
+    function formatTime(dateStr) {
+        const d = new Date(dateStr);
+        return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    }
+
+    // 按日期分组照片
+    function groupPhotosByDate(photos) {
+        const groups = {};
+        photos.forEach(photo => {
+            const d = new Date(photo.photo_time || photo.created_at);
+            const dateKey = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+            if (!groups[dateKey]) groups[dateKey] = { dateLabel: formatDate(d), dateKey, photos: [] };
+            groups[dateKey].photos.push(photo);
+        });
+        // 按日期降序排列
+        return Object.values(groups).sort((a, b) => b.dateKey.localeCompare(a.dateKey));
+    }
+
+    // 创建单张照片卡片元素
+    function createTimelinePhotoEl(photo) {
+        const item = document.createElement('div');
+        item.className = 'timeline-photo';
+        const timeStr = photo.photo_time || photo.created_at;
+        const timeDisplay = formatTime(timeStr);
+        const desc = photo.desc || getRandomDesc();
+        const uploaderTag = photo.uploader_name ? `<div class="photo-uploader">📷 ${photo.uploader_name}</div>` : '';
+
+        item.innerHTML = `
+            <img src="${photo.image_data}" alt="${photo.caption}" onclick="openViewer(this.src)">
+            <button class="delete-btn" onclick="deleteTimelinePhoto(this)" title="删除照片">✕</button>
+            <button class="edit-btn" onclick="editTimelineCaption(this)" title="编辑文字">✏️</button>
+            <div class="photo-info">
+                <div class="photo-title">${photo.caption}</div>
+                <div class="photo-desc">${desc}</div>
+                <div class="photo-time">${timeDisplay}</div>
+                ${uploaderTag}
+            </div>
+        `;
+        return item;
+    }
+
+    // 渲染完整时间轴
+    async function renderTimeline() {
+        try {
+            const { data, error } = await sb
+                .from('photos')
+                .select('*')
+                .order('photo_time', { ascending: false });
+
+            if (error) throw error;
+
+            const timeline = document.getElementById('userTimeline');
+            timeline.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                timeline.style.display = 'none';
+                return;
+            }
+            timeline.style.display = 'block';
+
+            // 如果照片没有 photo_time 字段，用 created_at 兜底
+            data.forEach(p => {
+                if (!p.photo_time) p.photo_time = p.created_at;
+            });
+
+            const groups = groupPhotosByDate(data);
+
+            groups.forEach(group => {
+                const groupEl = document.createElement('div');
+                groupEl.className = 'timeline-date-group';
+
+                const labelEl = document.createElement('div');
+                labelEl.className = 'timeline-date-label';
+                labelEl.innerHTML = '<div class="date-dot"></div>';
+
+                const textEl = document.createElement('div');
+                textEl.className = 'timeline-date-text';
+                textEl.textContent = group.dateLabel;
+
+                const photosGrid = document.createElement('div');
+                photosGrid.className = 'timeline-photos';
+
+                group.photos.forEach(photo => {
+                    photosGrid.appendChild(createTimelinePhotoEl(photo));
+                });
+
+                groupEl.appendChild(labelEl);
+                groupEl.appendChild(textEl);
+                groupEl.appendChild(photosGrid);
+                timeline.appendChild(groupEl);
+            });
+        } catch(e) {
+            console.log('加载云端照片失败:', e);
+        }
+    }
+    renderTimeline();
+
+    function addPhotoToGallery(src, caption, uploaderName) {
+        // 旧接口兼容，直接重渲染时间轴
+        renderTimeline();
+    }
+
+    function createAlbumPhotoEl(src, caption, uploaderName) {
+        // 已废弃，保留空实现避免报错
+        const item = document.createElement('div');
+        return item;
+    }
+
+    function deletePhoto(btn) {
+        deleteTimelinePhoto(btn);
+    }
+
+    function deleteTimelinePhoto(btn) {
+        const photoEl = btn.parentElement;
+        showDeleteConfirm('确定要删除这张照片吗？', async () => {
+            photoEl.classList.add('deleting');
+            setTimeout(() => {
+                photoEl.remove();
+                showToast('🗑️ 照片已删除');
+                // 如果该日期组下没有照片了，移除日期组
+                const group = photoEl.closest('.timeline-date-group');
+                if (group && group.querySelectorAll('.timeline-photo').length <= 1) {
+                    group.style.transition = 'opacity 0.3s ease';
+                    group.style.opacity = '0';
+                    setTimeout(() => group.remove(), 300);
+                }
+            }, 400);
+        });
+    }
+
+    function editTimelineCaption(btn) {
+        const info = btn.parentElement.querySelector('.photo-info');
+        const titleEl = info.querySelector('.photo-title');
+        const descEl = info.querySelector('.photo-desc');
+        const currentTitle = titleEl.textContent;
+        const currentDesc = descEl.textContent;
+
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:2000;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.2s ease;';
+        overlay.innerHTML = `
+            <div style="background:white;border-radius:20px;padding:32px 40px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.2);border:1px solid rgba(255,159,67,0.1);max-width:400px;width:90%;animation:popupIn 0.3s cubic-bezier(0.175,0.885,0.32,1.275) forwards;">
+                <div style="font-size:40px;margin-bottom:12px;">✏️</div>
+                <p style="font-size:16px;color:#5C4A1E;margin-bottom:20px;font-family:'Noto Sans SC',sans-serif;font-weight:600;">编辑照片文字</p>
+                <div style="text-align:left;margin-bottom:14px;">
+                    <label style="font-size:13px;color:#8B6914;font-weight:600;display:block;margin-bottom:6px;">标题</label>
+                    <input id="editTitle" type="text" value="${currentTitle}" maxlength="20" style="width:100%;padding:10px 14px;border:2px solid #B8D4F0;border-radius:12px;font-size:15px;font-family:'Noto Sans SC',sans-serif;color:#5C4A1E;outline:none;transition:border-color 0.3s;" onfocus="this.style.borderColor='#FF9F43'" onblur="this.style.borderColor='#B8D4F0'">
+                </div>
+                <div style="text-align:left;margin-bottom:24px;">
+                    <label style="font-size:13px;color:#8B6914;font-weight:600;display:block;margin-bottom:6px;">描述</label>
+                    <input id="editDesc" type="text" value="${currentDesc}" maxlength="50" style="width:100%;padding:10px 14px;border:2px solid #B8D4F0;border-radius:12px;font-size:14px;font-family:'Noto Sans SC',sans-serif;color:#8B6914;outline:none;transition:border-color 0.3s;" onfocus="this.style.borderColor='#FF9F43'" onblur="this.style.borderColor='#B8D4F0'">
+                </div>
+                <div style="display:flex;gap:12px;justify-content:center;">
+                    <button onclick="this.closest('div').parentElement.remove()" style="padding:10px 28px;border-radius:50px;border:1px solid #B8D4F0;background:white;color:#8B6914;font-size:15px;cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:all 0.3s ease;">取消</button>
+                    <button id="editSaveBtn" style="padding:10px 28px;border-radius:50px;border:none;background:linear-gradient(135deg,#FF9F43,#FF6B6B);color:white;font-size:15px;cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:all 0.3s ease;">保存</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        overlay.querySelector('#editSaveBtn').onclick = () => {
+            const newTitle = document.getElementById('editTitle').value.trim();
+            const newDesc = document.getElementById('editDesc').value.trim();
+            if (!newTitle) { document.getElementById('editTitle').style.borderColor = '#FF6B6B'; return; }
+            titleEl.textContent = newTitle;
+            descEl.textContent = newDesc;
+            overlay.remove();
+            showToast('✅ 文字已更新');
+        };
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) overlay.remove();
+        });
+    }
+
+    function deleteGalleryItem(btn) {
+        const item = btn.parentElement;
+        showDeleteConfirm('确定要删除这张照片吗？', () => {
+            item.classList.add('deleting');
+            setTimeout(() => {
+                item.remove();
+                showToast('🗑️ 照片已删除');
+            }, 400);
+        });
+    }
+
+    // ==================== 文字编辑 ====================
+    function editCaption(btn) {
+        const caption = btn.parentElement;
+        const h4 = caption.querySelector('h4');
+        const p = caption.querySelector('p');
+        const currentTitle = h4.textContent;
+        const currentDesc = p.textContent;
+
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:2000;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.2s ease;';
+        overlay.innerHTML = `
+            <div style="background:white;border-radius:20px;padding:32px 40px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.2);border:1px solid rgba(255,159,67,0.1);max-width:400px;width:90%;animation:popupIn 0.3s cubic-bezier(0.175,0.885,0.32,1.275) forwards;">
+                <div style="font-size:40px;margin-bottom:12px;">✏️</div>
+                <p style="font-size:16px;color:#5C4A1E;margin-bottom:20px;font-family:'Noto Sans SC',sans-serif;font-weight:600;">编辑照片文字</p>
+                <div style="text-align:left;margin-bottom:14px;">
+                    <label style="font-size:13px;color:#8B6914;font-weight:600;display:block;margin-bottom:6px;">标题</label>
+                    <input id="editTitle" type="text" value="${currentTitle}" maxlength="20" style="width:100%;padding:10px 14px;border:2px solid #B8D4F0;border-radius:12px;font-size:15px;font-family:'Noto Sans SC',sans-serif;color:#5C4A1E;outline:none;transition:border-color 0.3s;" onfocus="this.style.borderColor='#FF9F43'" onblur="this.style.borderColor='#B8D4F0'">
+                </div>
+                <div style="text-align:left;margin-bottom:24px;">
+                    <label style="font-size:13px;color:#8B6914;font-weight:600;display:block;margin-bottom:6px;">描述</label>
+                    <input id="editDesc" type="text" value="${currentDesc}" maxlength="50" style="width:100%;padding:10px 14px;border:2px solid #B8D4F0;border-radius:12px;font-size:14px;font-family:'Noto Sans SC',sans-serif;color:#8B6914;outline:none;transition:border-color 0.3s;" onfocus="this.style.borderColor='#FF9F43'" onblur="this.style.borderColor='#B8D4F0'">
+                </div>
+                <div style="display:flex;gap:12px;justify-content:center;">
+                    <button onclick="this.closest('div').parentElement.remove()" style="padding:10px 28px;border-radius:50px;border:1px solid #B8D4F0;background:white;color:#8B6914;font-size:15px;cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:all 0.3s ease;">取消</button>
+                    <button id="editSaveBtn" style="padding:10px 28px;border-radius:50px;border:none;background:linear-gradient(135deg,#FF9F43,#FF6B6B);color:white;font-size:15px;cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:all 0.3s ease;">保存</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        overlay.querySelector('#editSaveBtn').onclick = () => {
+            const newTitle = document.getElementById('editTitle').value.trim();
+            const newDesc = document.getElementById('editDesc').value.trim();
+            if (!newTitle) { document.getElementById('editTitle').style.borderColor = '#FF6B6B'; return; }
+            h4.textContent = newTitle;
+            p.textContent = newDesc;
+            overlay.remove();
+            showToast('✅ 文字已更新');
+        };
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) overlay.remove();
+        });
+    }
+
+    function loadCaptions() {
+        const captions = JSON.parse(localStorage.getItem('yaoyaoCaptions') || '{}');
+        const items = document.querySelectorAll('#galleryGrid .gallery-item');
+        items.forEach((item, idx) => {
+            if (captions[idx]) {
+                const h4 = item.querySelector('.gallery-caption h4');
+                const p = item.querySelector('.gallery-caption p');
+                if (h4) h4.textContent = captions[idx].title;
+                if (p) p.textContent = captions[idx].desc;
+            }
+        });
+    }
+    loadCaptions();
+
+    function showDeleteConfirm(message, onConfirm) {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:2000;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.2s ease;';
+        overlay.innerHTML = `
+            <div style="background:white;border-radius:20px;padding:32px 40px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.2);border:1px solid rgba(255,159,67,0.1);max-width:360px;width:90%;animation:popupIn 0.3s cubic-bezier(0.175,0.885,0.32,1.275) forwards;">
+                <div style="font-size:48px;margin-bottom:12px;">🐱</div>
+                <p style="font-size:16px;color:#5C4A1E;margin-bottom:24px;font-family:'Noto Sans SC',sans-serif;">${message}</p>
+                <div style="display:flex;gap:12px;justify-content:center;">
+                    <button onclick="this.closest('div').parentElement.remove()" style="padding:10px 28px;border-radius:50px;border:1px solid #B8D4F0;background:white;color:#8B6914;font-size:15px;cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:all 0.3s ease;">取消</button>
+                    <button id="confirmDeleteBtn" style="padding:10px 28px;border-radius:50px;border:none;background:linear-gradient(135deg,#FF6B6B,#ee5a5a);color:white;font-size:15px;cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:all 0.3s ease;">删除</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        overlay.querySelector('#confirmDeleteBtn').onclick = () => {
+            overlay.remove();
+            onConfirm();
+        };
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) overlay.remove();
+        });
+    }
+
+    // ==================== 图片查看器 ====================
+    function openViewer(src) {
+        document.getElementById('viewerImg').src = src;
+        document.getElementById('imageViewer').classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeViewer() {
+        document.getElementById('imageViewer').classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    // ==================== 语录轮播 ====================
+    const quotes = [
+        { text: '本喵最乖了，铲屎官要好好爱我哦～', emoji: '😸' },
+        { text: '今天的阳光真好，想窝在铲屎官怀里晒太阳...', emoji: '😾' },
+        { text: '安静地待在角落，就是本喵最大的温柔～', emoji: '😈' },
+        { text: '摸摸本喵的头，本喵就心满意足了～', emoji: '😾' },
+        { text: '只要你在身边，本喵什么都不需要～', emoji: '🤤' },
+        { text: '本喵选择你做铲屎官，是你的荣幸哦～', emoji: '😏' },
+        { text: '发呆是一种境界，你们人类不懂的。', emoji: '😆' },
+        { text: '本喵吃东西很优雅的，不像某些猫...', emoji: '😋' },
+        { text: '可以轻轻摸我，不要太用力哦...', emoji: '😾' },
+        { text: '半夜不跑酷，因为本喵要陪铲屎官睡觉～', emoji: '😼' },
+    ];
+    let currentQuote = 0;
+
+    function initQuotes() {
+        const nav = document.getElementById('quoteNav');
+        quotes.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.className = 'quote-dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => showQuote(i);
+            nav.appendChild(dot);
+        });
+        setInterval(() => showQuote((currentQuote + 1) % quotes.length), 5000);
+    }
+
+    function showQuote(index) {
+        currentQuote = index;
+        const textEl = document.getElementById('quoteText');
+        const emojiEl = document.getElementById('quoteEmoji');
+        textEl.style.opacity = 0;
+        setTimeout(() => {
+            textEl.textContent = quotes[index].text;
+            emojiEl.textContent = quotes[index].emoji;
+            textEl.style.opacity = 1;
+        }, 300);
+        document.querySelectorAll('.quote-dot').forEach((d, i) => {
+            d.classList.toggle('active', i === index);
+        });
+    }
+    initQuotes();
+
+    // ==================== Toast ====================
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // ==================== 导航 & 滚动 ====================
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.addEventListener('scroll', () => {
+        const btn = document.getElementById('backToTop');
+        if (window.scrollY > 400) {
+            btn.classList.add('show');
+        } else {
+            btn.classList.remove('show');
+        }
+    });
+
+    function toggleMobileMenu() {
+        const links = document.querySelector('.nav-links');
+        if (links.style.display === 'flex') {
+            links.style.display = 'none';
+        } else {
+            links.style.display = 'flex';
+            links.style.position = 'absolute';
+            links.style.top = '100%';
+            links.style.left = '0';
+            links.style.right = '0';
+            links.style.background = 'rgba(255, 248, 231, 0.98)';
+            links.style.flexDirection = 'column';
+            links.style.padding = '20px';
+            links.style.gap = '12px';
+            links.style.borderBottom = '2px dashed var(--soft-orange)';
+        }
+    }
+
+    // 平滑滚动到板块
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const links = document.querySelector('.nav-links');
+                links.style.display = '';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
