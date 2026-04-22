@@ -2537,7 +2537,7 @@
     checkSession();
 
     // ==================== 每日签到系统 ====================
-    const CHECKIN_TABLE = 'check_ins';
+    const CHECKIN_TABLE = 'yaoyao_check_ins';
 
     // 获取今天的日期字符串 (YYYY-MM-DD)
     function getTodayStr() {
@@ -2807,7 +2807,7 @@
             const base64 = await compressImage(pendingFile, 1200, 0.75);
             // 保存到 Supabase 数据库（带时间戳）
             const { data, error } = await sb
-                .from('photos')
+                .from('yaoyao_photos')
                 .insert({
                     caption: caption,
                     image_data: base64,
@@ -2962,7 +2962,7 @@
     async function renderTimeline() {
         try {
             const { data, error } = await sb
-                .from('photos')
+                .from('yaoyao_photos')
                 .select('*')
                 .order('photo_time', { ascending: false });
 
