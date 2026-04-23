@@ -3742,14 +3742,15 @@
                 .eq('setting_key', AVATAR_KEY);
             console.log('update 结果:', updateError);
             
-            if (updateError) {
-                // update 失败，尝试 insert
-                const { error: insertError } = await sb.from(SETTINGS_TABLE).insert({
-                    setting_key: AVATAR_KEY,
-                    setting_value: base64
-                });
-                console.log('insert 结果:', insertError);
-                if (insertError) throw insertError;
+            // update 没有报错但可能没有匹配到行，尝试 insert
+            const { error: insertError } = await sb.from(SETTINGS_TABLE).insert({
+                setting_key: AVATAR_KEY,
+                setting_value: base64
+            });
+            console.log('insert 结果:', insertError);
+            // insert 失败可能是主键冲突（已存在），这是正常的
+            if (insertError && insertError.code !== '23505') {
+                throw insertError;
             }
             console.log('✅ 头像已保存到云端');
             return base64;
