@@ -2983,8 +2983,9 @@
     // 等待 session 恢复后再初始化各模块
     checkSession().then(() => {
         initGallery();
-        initAvatar();
     });
+    // 头像不依赖登录，立即加载
+    initAvatar();
 
     // ==================== 每日签到系统 ====================
     const CHECKIN_TABLE = 'yaoyao_check_ins';
@@ -3736,18 +3737,16 @@
         if (!currentUser) return;
         // 压缩头像到合理大小
         const compressed = await compressImage(new Blob([Uint8Array.from(atob(base64.split(',')[1]))], {type:'image/jpeg'}), 400, 0.8);
-        // upsert: 有就更新，没有就插入
+        // upsert: 有就更新，没有就插入（不绑定用户，用固定 key）
         await sb.from(SETTINGS_TABLE).upsert({
-            user_id: currentUser.id,
             setting_key: AVATAR_KEY,
             setting_value: compressed
-        }, { onConflict: 'user_id,setting_key' });
+        }, { onConflict: 'setting_key' });
         return compressed;
     }
 
     async function loadAvatar() {
-        if (!currentUser) return null;
-        const { data } = await sb.from(SETTINGS_TABLE).select('setting_value').eq('user_id', currentUser.id).eq('setting_key', AVATAR_KEY).single();
+        const { data } = await sb.from(SETTINGS_TABLE).select('setting_value').eq('setting_key', AVATAR_KEY).single();
         return data?.setting_value || null;
     }
 
@@ -3774,16 +3773,19 @@
 
     // 页面加载时恢复头像（优先云端 > 本地）
     async function initAvatar() {
-        const cloudAvatar = await loadAvatar();
-        if (cloudAvatar) {
-            document.getElementById('heroAvatar').src = cloudAvatar;
-            localStorage.setItem('yaoyaoAvatar', cloudAvatar);
-        } else {
-            const savedAvatar = localStorage.getItem('yaoyaoAvatar');
-            if (savedAvatar) {
-                const img = document.getElementById('heroAvatar');
-                if (img) img.src = savedAvatar;
+        try {
+            const cloudAvatar = await loadAvatar();
+            if (cloudAvatar) {
+                document.getElementById('heroAvatar').src = cloudAvatar;
+                localStorage.setItem('yaoyaoAvatar', cloudAvatar);
+                return;
             }
+        } catch(e) {}
+        // 云端没有，用本地缓存
+        const savedAvatar = localStorage.getItem('yaoyaoAvatar');
+        if (savedAvatar) {
+            const img = document.getElementById('heroAvatar');
+            if (img) img.src = savedAvatar;
         }
     }
 
