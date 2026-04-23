@@ -3437,6 +3437,7 @@
     function createTimelinePhotoEl(photo) {
         const item = document.createElement('div');
         item.className = 'timeline-photo';
+        item.dataset.photoId = photo.id;
         const timeStr = photo.photo_time || photo.created_at;
         const timeDisplay = formatTime(timeStr);
         const desc = photo.desc || getRandomDesc();
@@ -3529,19 +3530,22 @@
 
     function deleteTimelinePhoto(btn) {
         const photoEl = btn.parentElement;
+        const photoId = photoEl.dataset.photoId;
         showDeleteConfirm('确定要删除这张照片吗？', async () => {
             photoEl.classList.add('deleting');
-            setTimeout(() => {
-                photoEl.remove();
-                showToast('🗑️ 照片已删除');
-                // 如果该日期组下没有照片了，移除日期组
-                const group = photoEl.closest('.timeline-date-group');
-                if (group && group.querySelectorAll('.timeline-photo').length <= 1) {
-                    group.style.transition = 'opacity 0.3s ease';
-                    group.style.opacity = '0';
-                    setTimeout(() => group.remove(), 300);
+            try {
+                if (photoId) {
+                    const { error } = await sb.from('yaoyao_photos').delete().eq('id', photoId);
+                    if (error) { showToast('删除失败: ' + error.message); photoEl.classList.remove('deleting'); return; }
                 }
-            }, 400);
+                setTimeout(() => {
+                    photoEl.remove();
+                    renderTimeline();
+                    showToast('🗑️ 照片已删除');
+                }, 400);
+            } catch(e) {
+                showToast('❌ 删除失败'); photoEl.classList.remove('deleting');
+            }
         });
     }
 
