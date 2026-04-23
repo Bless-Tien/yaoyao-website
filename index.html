@@ -155,6 +155,34 @@
             position: relative;
             display: inline-block;
             margin-bottom: 24px;
+            cursor: pointer;
+        }
+
+        .avatar-upload-hint {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #38BDF8, #0284C7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(56,189,248,0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+            border: 2px solid white;
+        }
+
+        .avatar-container:hover .avatar-upload-hint {
+            opacity: 1;
+        }
+
+        .avatar-container:hover .avatar-inner {
+            filter: brightness(0.85);
         }
 
         .avatar-ring {
@@ -1874,12 +1902,14 @@
     <!-- ========== Hero ========== -->
     <section class="hero">
         <div class="hero-content">
-            <div class="avatar-container">
+            <div class="avatar-container" onclick="document.getElementById('avatarUploadInput').click()" title="点击更换头像">
                 <div class="avatar-ring">
                     <div class="avatar-inner">
-                        <img src="photos/yaoyao-avatar.png" alt="瑶瑶" style="width:140px;height:140px;object-fit:cover;border-radius:50%;">
+                        <img id="heroAvatar" src="photos/yaoyao-avatar.png" alt="瑶瑶" style="width:140px;height:140px;object-fit:cover;border-radius:50%;">
                     </div>
                 </div>
+                <div class="avatar-upload-hint">📷</div>
+                <input type="file" id="avatarUploadInput" accept="image/*" style="display:none;" onchange="changeAvatar(this)">
             </div>
             <h1>瑶瑶</h1>
             <p class="tagline">· 佛系小天使 · 粘人小甜心 · 安静美人猫 ·</p>
@@ -1898,7 +1928,7 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-num">🐱</div>
-                    <div class="stat-label">2025.06.01生</div>
+                    <div class="stat-label">2025.03.05生</div>
                 </div>
             </div>
         </div>
@@ -3137,8 +3167,16 @@
             if (!newTitle) { document.getElementById('editTitle').style.borderColor = '#FF6B6B'; return; }
             h4.textContent = newTitle;
             p.textContent = newDesc;
+            // 持久化保存到 localStorage
+            const items = document.querySelectorAll('#galleryGrid .gallery-item');
+            const idx = Array.from(items).indexOf(caption.closest('.gallery-item'));
+            if (idx !== -1) {
+                const captions = JSON.parse(localStorage.getItem('yaoyaoCaptions') || '{}');
+                captions[idx] = { title: newTitle, desc: newDesc };
+                localStorage.setItem('yaoyaoCaptions', JSON.stringify(captions));
+            }
             overlay.remove();
-            showToast('✅ 文字已更新');
+            showToast('✅ 文字已更新并保存');
         };
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) overlay.remove();
@@ -3158,6 +3196,29 @@
         });
     }
     loadCaptions();
+
+    // ==================== 头像上传 ====================
+    function changeAvatar(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const base64 = e.target.result;
+            document.getElementById('heroAvatar').src = base64;
+            localStorage.setItem('yaoyaoAvatar', base64);
+            showToast('🐱 头像已更换！');
+        };
+        reader.readAsDataURL(file);
+        input.value = '';
+    }
+
+    // 页面加载时恢复自定义头像
+    const savedAvatar = localStorage.getItem('yaoyaoAvatar');
+    if (savedAvatar) {
+        const img = document.getElementById('heroAvatar');
+        if (img) img.src = savedAvatar;
+    }
+
 
     function showDeleteConfirm(message, onConfirm) {
         const overlay = document.createElement('div');
