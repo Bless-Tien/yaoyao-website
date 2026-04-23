@@ -2983,6 +2983,7 @@
     // 等待 session 恢复后再初始化各模块
     checkSession().then(() => {
         initGallery();
+        initAvatar();
     });
 
     // ==================== 每日签到系统 ====================
@@ -3727,26 +3728,63 @@
 
     // initGallery 已在 checkSession 完成后调用
 
-    // ==================== 头像上传 ====================
+    // ==================== 头像上传（Supabase 同步） ====================
+    const SETTINGS_TABLE = 'yaoyao_settings';
+    const AVATAR_KEY = 'avatar';
+
+    async function saveAvatar(base64) {
+        if (!currentUser) return;
+        // 压缩头像到合理大小
+        const compressed = await compressImage(new Blob([Uint8Array.from(atob(base64.split(',')[1]))], {type:'image/jpeg'}), 400, 0.8);
+        // upsert: 有就更新，没有就插入
+        await sb.from(SETTINGS_TABLE).upsert({
+            user_id: currentUser.id,
+            setting_key: AVATAR_KEY,
+            setting_value: compressed
+        }, { onConflict: 'user_id,setting_key' });
+        return compressed;
+    }
+
+    async function loadAvatar() {
+        if (!currentUser) return null;
+        const { data } = await sb.from(SETTINGS_TABLE).select('setting_value').eq('user_id', currentUser.id).eq('setting_key', AVATAR_KEY).single();
+        return data?.setting_value || null;
+    }
+
     function changeAvatar(input) {
         const file = input.files[0];
         if (!file) return;
+        if (!currentUser) { showToast('🐱 请先登录再更换头像～'); input.value = ''; return; }
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
             const base64 = e.target.result;
             document.getElementById('heroAvatar').src = base64;
             localStorage.setItem('yaoyaoAvatar', base64);
-            showToast('🐱 头像已更换！');
+            try {
+                await saveAvatar(base64);
+                showToast('🐱 头像已更换并同步！');
+            } catch(err) {
+                console.error('头像同步失败:', err);
+                showToast('🐱 头像已更换（仅本设备）');
+            }
         };
         reader.readAsDataURL(file);
         input.value = '';
     }
 
-    // 页面加载时恢复自定义头像
-    const savedAvatar = localStorage.getItem('yaoyaoAvatar');
-    if (savedAvatar) {
-        const img = document.getElementById('heroAvatar');
-        if (img) img.src = savedAvatar;
+    // 页面加载时恢复头像（优先云端 > 本地）
+    async function initAvatar() {
+        const cloudAvatar = await loadAvatar();
+        if (cloudAvatar) {
+            document.getElementById('heroAvatar').src = cloudAvatar;
+            localStorage.setItem('yaoyaoAvatar', cloudAvatar);
+        } else {
+            const savedAvatar = localStorage.getItem('yaoyaoAvatar');
+            if (savedAvatar) {
+                const img = document.getElementById('heroAvatar');
+                if (img) img.src = savedAvatar;
+            }
+        }
     }
 
 
