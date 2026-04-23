@@ -3734,19 +3734,34 @@
     const AVATAR_KEY = 'avatar';
 
     async function saveAvatar(base64) {
-        if (!currentUser) return;
+        if (!currentUser) throw new Error('未登录');
         // 压缩头像到合理大小
-        const compressed = await compressImage(new Blob([Uint8Array.from(atob(base64.split(',')[1]))], {type:'image/jpeg'}), 400, 0.8);
-        // upsert: 有就更新，没有就插入（不绑定用户，用固定 key）
-        await sb.from(SETTINGS_TABLE).upsert({
-            setting_key: AVATAR_KEY,
-            setting_value: compressed
-        }, { onConflict: 'setting_key' });
-        return compressed;
+        try {
+            const byteString = atob(base64.split(',')[1]);
+            const mimeString = base64.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) { ia[i] = byteString.charCodeAt(i); }
+            const blob = new Blob([ab], { type: mimeString });
+            const compressed = await compressImage(blob, 400, 0.8);
+            // upsert
+            const { error } = await sb.from(SETTINGS_TABLE).upsert({
+                setting_key: AVATAR_KEY,
+                setting_value: compressed
+            }, { onConflict: 'setting_key' });
+            if (error) throw error;
+            console.log('✅ 头像已保存到云端');
+            return compressed;
+        } catch(e) {
+            console.error('头像保存失败:', e);
+            throw e;
+        }
     }
 
     async function loadAvatar() {
-        const { data } = await sb.from(SETTINGS_TABLE).select('setting_value').eq('setting_key', AVATAR_KEY).single();
+        const { data, error } = await sb.from(SETTINGS_TABLE).select('setting_value').eq('setting_key', AVATAR_KEY).single();
+        if (error) { console.log('头像加载:', error.message); return null; }
+        console.log('✅ 从云端加载到头像, 长度:', data?.setting_value?.length || 0);
         return data?.setting_value || null;
     }
 
