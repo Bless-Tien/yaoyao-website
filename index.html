@@ -2351,7 +2351,7 @@
     <section class="gallery-section" id="gallery">
         <div class="section">
             <div class="section-header">
-                <h2>📸 瑶瑶的相册</h2>
+                <h2>✨ Q咪空间</h2>
                 <p>每一张都是绝美大片！</p>
                 <div class="divider"></div>
             </div>
@@ -2422,14 +2422,18 @@
         let years = now.getFullYear() - birth.getFullYear();
         let months = now.getMonth() - birth.getMonth();
         let days = now.getDate() - birth.getDate();
-        if (days < 0) months--;
+        if (days < 0) {
+            months--;
+            const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+            days += prevMonth.getDate();
+        }
         if (months < 0) { years--; months += 12; }
         const totalMonths = years * 12 + months;
         const el = document.getElementById('ageDisplay');
         if (years >= 1) {
-            el.textContent = years + '岁' + (months > 0 ? months + '个月' : '');
+            el.textContent = years + '岁' + (months > 0 ? months + '个月' : '') + (days > 0 ? days + '天' : '');
         } else {
-            el.textContent = totalMonths + '个月' + (days >= 0 ? days + '天' : '');
+            el.textContent = totalMonths + '个月' + (days > 0 ? days + '天' : '');
         }
     }
     calcAge();
