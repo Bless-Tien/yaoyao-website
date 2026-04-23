@@ -3625,10 +3625,29 @@
         });
     }
 
+    // ==================== 确保默认照片存入数据库 ====================
+    async function ensureGalleryInDb(photoEl) {
+        let photoId = photoEl.dataset.photoId;
+        if (!photoId || !photoId.startsWith('default-')) return photoId;
+        // 默认照片，需要先插入数据库
+        const idx = parseInt(photoId.replace('default-', ''));
+        const def = defaultGalleryPhotos[idx];
+        const { data, error } = await sb.from('yaoyao_gallery').insert({
+            caption: def.caption,
+            desc: def.desc,
+            image_data: def.src,
+            position: idx
+        }).select().single();
+        if (error) { console.error('插入默认照片失败:', error); return null; }
+        // 用真实ID替换DOM上的假ID
+        photoEl.dataset.photoId = data.id;
+        return data.id;
+    }
+
     // ==================== 文字编辑（相册） ====================
     function editCaption(btn) {
         const photoEl = btn.closest('.gallery-item');
-        const photoId = photoEl.dataset.photoId;
+        let photoId = photoEl.dataset.photoId;
         const h4 = photoEl.querySelector('.gallery-caption h4');
         const p = photoEl.querySelector('.gallery-caption p');
         const currentTitle = h4.textContent;
@@ -3660,9 +3679,10 @@
             const newTitle = document.getElementById('editTitle').value.trim();
             const newDesc = document.getElementById('editDesc').value.trim();
             if (!newTitle) { document.getElementById('editTitle').style.borderColor = '#FF6B6B'; return; }
-            // 同步到数据库
-            if (photoId && !photoId.startsWith('default-')) {
-                const { error } = await sb.from('yaoyao_gallery').update({ caption: newTitle, desc: newDesc }).eq('id', photoId);
+            // 确保照片在数据库中有记录
+            const realId = await ensureGalleryInDb(photoEl);
+            if (realId) {
+                const { error } = await sb.from('yaoyao_gallery').update({ caption: newTitle, desc: newDesc }).eq('id', realId);
                 if (error) { showToast('❌ 保存失败'); return; }
             }
             h4.textContent = newTitle;
@@ -3678,7 +3698,6 @@
     // ==================== 相册照片替换 ====================
     function replaceGalleryPhoto(btn) {
         const photoEl = btn.closest('.gallery-item');
-        const photoId = photoEl.dataset.photoId;
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/*';
@@ -3688,8 +3707,10 @@
             showToast('⏳ 替换中...');
             try {
                 const base64 = await compressImage(file, 1200, 0.75);
-                if (photoId && !photoId.startsWith('default-')) {
-                    const { error } = await sb.from('yaoyao_gallery').update({ image_data: base64 }).eq('id', photoId);
+                // 确保照片在数据库中有记录
+                const realId = await ensureGalleryInDb(photoEl);
+                if (realId) {
+                    const { error } = await sb.from('yaoyao_gallery').update({ image_data: base64 }).eq('id', realId);
                     if (error) { showToast('❌ 替换失败'); return; }
                 }
                 photoEl.querySelector('img').src = base64;
