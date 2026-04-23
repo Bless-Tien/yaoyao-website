@@ -3735,23 +3735,16 @@
 
     async function saveAvatar(base64) {
         if (!currentUser) throw new Error('未登录');
-        // 压缩头像到合理大小
+        // 先尝试不压缩，直接存 base64
         try {
-            const byteString = atob(base64.split(',')[1]);
-            const mimeString = base64.split(',')[0].split(':')[1].split(';')[0];
-            const ab = new ArrayBuffer(byteString.length);
-            const ia = new Uint8Array(ab);
-            for (let i = 0; i < byteString.length; i++) { ia[i] = byteString.charCodeAt(i); }
-            const blob = new Blob([ab], { type: mimeString });
-            const compressed = await compressImage(blob, 400, 0.8);
-            // upsert
-            const { error } = await sb.from(SETTINGS_TABLE).upsert({
+            const { data, error } = await sb.from(SETTINGS_TABLE).upsert({
                 setting_key: AVATAR_KEY,
-                setting_value: compressed
+                setting_value: base64
             }, { onConflict: 'setting_key' });
+            console.log('头像 upsert 结果:', data, error);
             if (error) throw error;
             console.log('✅ 头像已保存到云端');
-            return compressed;
+            return base64;
         } catch(e) {
             console.error('头像保存失败:', e);
             throw e;
