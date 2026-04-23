@@ -3550,7 +3550,9 @@
     }
 
     function editTimelineCaption(btn) {
-        const info = btn.parentElement.querySelector('.photo-info');
+        const photoEl = btn.parentElement;
+        const photoId = photoEl.dataset.photoId;
+        const info = photoEl.querySelector('.photo-info');
         const titleEl = info.querySelector('.photo-title');
         const descEl = info.querySelector('.photo-desc');
         const currentTitle = titleEl.textContent;
@@ -3578,10 +3580,15 @@
         `;
         document.body.appendChild(overlay);
 
-        overlay.querySelector('#editSaveBtn').onclick = () => {
+        overlay.querySelector('#editSaveBtn').onclick = async () => {
             const newTitle = document.getElementById('editTitle').value.trim();
             const newDesc = document.getElementById('editDesc').value.trim();
             if (!newTitle) { document.getElementById('editTitle').style.borderColor = '#FF6B6B'; return; }
+            // 同步到 Supabase 数据库
+            if (photoId) {
+                const { error } = await sb.from('yaoyao_photos').update({ caption: newTitle, desc: newDesc }).eq('id', photoId);
+                if (error) { showToast('❌ 保存失败: ' + error.message); return; }
+            }
             titleEl.textContent = newTitle;
             descEl.textContent = newDesc;
             overlay.remove();
