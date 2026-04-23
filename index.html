@@ -2980,7 +2980,10 @@
             }
         } catch(e) {}
     }
-    checkSession();
+    // 等待 session 恢复后再初始化各模块
+    checkSession().then(() => {
+        initGallery();
+    });
 
     // ==================== 每日签到系统 ====================
     const CHECKIN_TABLE = 'yaoyao_check_ins';
@@ -3722,7 +3725,7 @@
         input.click();
     }
 
-    initGallery();
+    // initGallery 已在 checkSession 完成后调用
 
     // ==================== 头像上传 ====================
     function changeAvatar(input) {
