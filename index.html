@@ -2984,8 +2984,7 @@
     checkSession().then(() => {
         initGallery();
     });
-    // 头像不依赖登录，立即加载
-    initAvatar();
+    // 头像不依赖登录，延迟到脚本末尾初始化
 
     // ==================== 每日签到系统 ====================
     const CHECKIN_TABLE = 'yaoyao_check_ins';
@@ -3824,6 +3823,7 @@
             }
         }
     }
+    initAvatar();
 
 
     function showDeleteConfirm(message, onConfirm) {
