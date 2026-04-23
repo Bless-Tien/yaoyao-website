@@ -2693,7 +2693,7 @@
 
         } catch(err) {
             console.error('签到失败:', err);
-            showToast('❌ 签到失败，请重试');
+            showToast('❌ 签到失败: ' + (err.message || JSON.stringify(err)));
         }
     }
 
