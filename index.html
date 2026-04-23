@@ -890,6 +890,33 @@
             background: rgba(56, 189, 248, 0.3);
         }
 
+        /* 相册替换按钮 */
+        .gallery-item .replace-btn {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(56, 189, 248, 0.9);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 5;
+        }
+        .gallery-item:hover .replace-btn {
+            opacity: 1;
+        }
+        .gallery-item .replace-btn:hover {
+            transform: scale(1.15);
+            background: #0284C7;
+        }
+
         .gallery-caption h4 {
             font-family: 'ZCOOL KuaiLe', cursive;
             font-size: 16px;
@@ -2329,86 +2356,7 @@
                 <div class="divider"></div>
             </div>
             <div class="gallery-grid" id="galleryGrid">
-                <!-- 照片卡片1 -->
-                <div class="gallery-item">
-                    <img src="photos/9c44b507c538835f4a8c8fd6063fa072.jpg" alt="安静美瑶瑶" onclick="openViewer(this.src)">
-                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
-                    <div class="gallery-caption">
-                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
-                        <h4>安静美瑶瑶</h4>
-                        <p>"在阳光下安静地打盹，是瑶瑶最喜欢的日常～"</p>
-                    </div>
-                </div>
-                <!-- 照片卡片2 -->
-                <div class="gallery-item">
-                    <img src="photos/6f5a41b2368b4404a9c267db586927c8.jpg" alt="温柔小甜心" onclick="openViewer(this.src)">
-                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
-                    <div class="gallery-caption">
-                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
-                        <h4>温柔小甜心</h4>
-                        <p>"瑶瑶今天心情很好，批准你摸摸头～"</p>
-                    </div>
-                </div>
-                <!-- 照片卡片3 -->
-                <div class="gallery-item">
-                    <img src="photos/60c002a3c53b783ffc6f45c5df34324d.jpg" alt="佛系日常" onclick="openViewer(this.src)">
-                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
-                    <div class="gallery-caption">
-                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
-                        <h4>佛系日常</h4>
-                        <p>"不争不抢，安安静静做自己最好～"</p>
-                    </div>
-                </div>
-                <!-- 照片卡片4 -->
-                <div class="gallery-item">
-                    <img src="photos/证件照.jpg" alt="粘人时刻" onclick="openViewer(this.src)">
-                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
-                    <div class="gallery-caption">
-                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
-                        <h4>粘人时刻</h4>
-                        <p>"靠在主人身边，就是最幸福的时刻～"</p>
-                    </div>
-                </div>
-                <!-- 照片卡片5 -->
-                <div class="gallery-item">
-                    <img src="photos/b7e759b96e23bb0d8976714e676107bb.jpg" alt="优雅睡姿" onclick="openViewer(this.src)">
-                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
-                    <div class="gallery-caption">
-                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
-                        <h4>优雅睡姿</h4>
-                        <p>"瑶瑶的睡姿永远是这么优雅～"</p>
-                    </div>
-                </div>
-                <!-- 照片卡片6 -->
-                <div class="gallery-item">
-                    <img src="photos/3c6b1dd013766683b5c516f712bbf953.jpg" alt="发呆中" onclick="openViewer(this.src)">
-                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
-                    <div class="gallery-caption">
-                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
-                        <h4>发呆中</h4>
-                        <p>"在想什么呢？大概在想下次什么时候抱抱～"</p>
-                    </div>
-                </div>
-                <!-- 照片卡片7 -->
-                <div class="gallery-item">
-                    <img src="photos/35c673c491a6241e8d11b670469d1528.jpg" alt="萌萌哒" onclick="openViewer(this.src)">
-                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
-                    <div class="gallery-caption">
-                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
-                        <h4>萌萌哒</h4>
-                        <p>"不经意间的一个回眸，美到犯规！"</p>
-                    </div>
-                </div>
-                <!-- 照片卡片8 -->
-                <div class="gallery-item">
-                    <img src="photos/60e24b9d935750dd1728809b46b7a15a.jpg" alt="阳光浴" onclick="openViewer(this.src)">
-                    <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
-                    <div class="gallery-caption">
-                        <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
-                        <h4>阳光浴</h4>
-                        <p>"晒太阳是每天最重要的功课～"</p>
-                    </div>
-                </div>
+                <!-- 从数据库动态加载 -->
             </div>
             <!-- 用户上传照片 - 时间轴 -->
             <div class="user-timeline" id="userTimeline">
@@ -3600,21 +3548,89 @@
     }
 
     function deleteGalleryItem(btn) {
-        const item = btn.parentElement;
-        showDeleteConfirm('确定要删除这张照片吗？', () => {
-            item.classList.add('deleting');
-            setTimeout(() => {
-                item.remove();
-                showToast('🗑️ 照片已删除');
-            }, 400);
+        const photoEl = btn.parentElement;
+        const photoId = photoEl.dataset.photoId;
+        showDeleteConfirm('确定要删除这张照片吗？', async () => {
+            photoEl.classList.add('deleting');
+            try {
+                if (photoId) {
+                    const { error } = await sb.from('yaoyao_gallery').delete().eq('id', photoId);
+                    if (error) { showToast('❌ 删除失败'); photoEl.classList.remove('deleting'); return; }
+                }
+                setTimeout(() => {
+                    photoEl.remove();
+                    showToast('🗑️ 照片已删除');
+                }, 400);
+            } catch(e) {
+                showToast('❌ 删除失败'); photoEl.classList.remove('deleting');
+            }
         });
     }
 
-    // ==================== 文字编辑 ====================
+    // ==================== 相册数据库渲染 ====================
+    const defaultGalleryPhotos = [
+        { caption: '安静美瑶瑶', desc: '在阳光下安静地打盹，是瑶瑶最喜欢的日常～', src: 'photos/9c44b507c538835f4a8c8fd6063fa072.jpg' },
+        { caption: '温柔小甜心', desc: '瑶瑶今天心情很好，批准你摸摸头～', src: 'photos/6f5a41b2368b4404a9c267db586927c8.jpg' },
+        { caption: '佛系日常', desc: '不争不抢，安安静静做自己最好～', src: 'photos/60c002a3c53b783ffc6f45c5df34324d.jpg' },
+        { caption: '粘人时刻', desc: '靠在主人身边，就是最幸福的时刻～', src: 'photos/证件照.jpg' },
+        { caption: '优雅睡姿', desc: '瑶瑶的睡姿永远是这么优雅～', src: 'photos/b7e759b96e23bb0d8976714e676107bb.jpg' },
+        { caption: '发呆中', desc: '在想什么呢？大概在想下次什么时候抱抱～', src: 'photos/3c6b1dd013766683b5c516f712bbf953.jpg' },
+        { caption: '萌萌哒', desc: '不经意间的一个回眸，美到犯规！', src: 'photos/35c673c491a6241e8d11b670469d1528.jpg' },
+        { caption: '阳光浴', desc: '晒太阳是每天最重要的功课～', src: 'photos/60e24b9d935750dd1728809b46b7a15a.jpg' }
+    ];
+
+    async function initGallery() {
+        try {
+            const { data, error } = await sb.from('yaoyao_gallery').select('*').order('position', { ascending: true });
+            if (error || !data || data.length === 0) {
+                // 数据库没有数据，用默认照片初始化
+                renderGalleryFromDefaults();
+                return;
+            }
+            renderGallery(data);
+        } catch(e) {
+            console.log('加载相册失败，使用默认:', e);
+            renderGalleryFromDefaults();
+        }
+    }
+
+    function renderGalleryFromDefaults() {
+        renderGallery(defaultGalleryPhotos.map((p, i) => ({
+            id: 'default-' + i,
+            caption: p.caption,
+            desc: p.desc,
+            image_data: p.src,
+            position: i
+        })));
+    }
+
+    function renderGallery(photos) {
+        const grid = document.getElementById('galleryGrid');
+        grid.innerHTML = '';
+        photos.forEach(photo => {
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.dataset.photoId = photo.id;
+            item.innerHTML = `
+                <img src="${photo.image_data}" alt="${photo.caption}" onclick="openViewer(this.src)">
+                <button class="delete-btn" onclick="deleteGalleryItem(this)" title="删除照片">✕</button>
+                <button class="edit-btn" onclick="editCaption(this)" title="编辑文字">✏️</button>
+                <button class="replace-btn" onclick="replaceGalleryPhoto(this)" title="替换照片">🔄</button>
+                <div class="gallery-caption">
+                    <h4>${photo.caption}</h4>
+                    <p>${photo.desc}</p>
+                </div>
+            `;
+            grid.appendChild(item);
+        });
+    }
+
+    // ==================== 文字编辑（相册） ====================
     function editCaption(btn) {
-        const caption = btn.parentElement;
-        const h4 = caption.querySelector('h4');
-        const p = caption.querySelector('p');
+        const photoEl = btn.closest('.gallery-item');
+        const photoId = photoEl.dataset.photoId;
+        const h4 = photoEl.querySelector('.gallery-caption h4');
+        const p = photoEl.querySelector('.gallery-caption p');
         const currentTitle = h4.textContent;
         const currentDesc = p.textContent;
 
@@ -3640,41 +3656,52 @@
         `;
         document.body.appendChild(overlay);
 
-        overlay.querySelector('#editSaveBtn').onclick = () => {
+        overlay.querySelector('#editSaveBtn').onclick = async () => {
             const newTitle = document.getElementById('editTitle').value.trim();
             const newDesc = document.getElementById('editDesc').value.trim();
             if (!newTitle) { document.getElementById('editTitle').style.borderColor = '#FF6B6B'; return; }
+            // 同步到数据库
+            if (photoId && !photoId.startsWith('default-')) {
+                const { error } = await sb.from('yaoyao_gallery').update({ caption: newTitle, desc: newDesc }).eq('id', photoId);
+                if (error) { showToast('❌ 保存失败'); return; }
+            }
             h4.textContent = newTitle;
             p.textContent = newDesc;
-            // 持久化保存到 localStorage
-            const items = document.querySelectorAll('#galleryGrid .gallery-item');
-            const idx = Array.from(items).indexOf(caption.closest('.gallery-item'));
-            if (idx !== -1) {
-                const captions = JSON.parse(localStorage.getItem('yaoyaoCaptions') || '{}');
-                captions[idx] = { title: newTitle, desc: newDesc };
-                localStorage.setItem('yaoyaoCaptions', JSON.stringify(captions));
-            }
             overlay.remove();
-            showToast('✅ 文字已更新并保存');
+            showToast('✅ 文字已更新');
         };
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) overlay.remove();
         });
     }
 
-    function loadCaptions() {
-        const captions = JSON.parse(localStorage.getItem('yaoyaoCaptions') || '{}');
-        const items = document.querySelectorAll('#galleryGrid .gallery-item');
-        items.forEach((item, idx) => {
-            if (captions[idx]) {
-                const h4 = item.querySelector('.gallery-caption h4');
-                const p = item.querySelector('.gallery-caption p');
-                if (h4) h4.textContent = captions[idx].title;
-                if (p) p.textContent = captions[idx].desc;
+    // ==================== 相册照片替换 ====================
+    function replaceGalleryPhoto(btn) {
+        const photoEl = btn.closest('.gallery-item');
+        const photoId = photoEl.dataset.photoId;
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = async () => {
+            const file = input.files[0];
+            if (!file) return;
+            showToast('⏳ 替换中...');
+            try {
+                const base64 = await compressImage(file, 1200, 0.75);
+                if (photoId && !photoId.startsWith('default-')) {
+                    const { error } = await sb.from('yaoyao_gallery').update({ image_data: base64 }).eq('id', photoId);
+                    if (error) { showToast('❌ 替换失败'); return; }
+                }
+                photoEl.querySelector('img').src = base64;
+                showToast('✅ 照片已替换');
+            } catch(e) {
+                showToast('❌ 替换失败');
             }
-        });
+        };
+        input.click();
     }
-    loadCaptions();
+
+    initGallery();
 
     // ==================== 头像上传 ====================
     function changeAvatar(input) {
