@@ -3736,21 +3736,25 @@
     async function saveAvatar(base64) {
         if (!currentUser) throw new Error('未登录');
         try {
-            // 先尝试 update，如果不存在再 insert
-            const { error: updateError } = await sb.from(SETTINGS_TABLE)
-                .update({ setting_value: base64 })
-                .eq('setting_key', AVATAR_KEY);
-            console.log('update 结果:', updateError);
+            // 先查是否存在
+            const { data: existing } = await sb.from(SETTINGS_TABLE).select('setting_key').eq('setting_key', AVATAR_KEY).single();
+            console.log('查询结果:', existing);
             
-            // update 没有报错但可能没有匹配到行，尝试 insert
-            const { error: insertError } = await sb.from(SETTINGS_TABLE).insert({
-                setting_key: AVATAR_KEY,
-                setting_value: base64
-            });
-            console.log('insert 结果:', insertError);
-            // insert 失败可能是主键冲突（已存在），这是正常的
-            if (insertError && insertError.code !== '23505') {
-                throw insertError;
+            if (existing) {
+                // 存在则更新
+                const { error } = await sb.from(SETTINGS_TABLE)
+                    .update({ setting_value: base64 })
+                    .eq('setting_key', AVATAR_KEY);
+                console.log('update 结果:', error);
+                if (error) throw error;
+            } else {
+                // 不存在则插入
+                const { error } = await sb.from(SETTINGS_TABLE).insert({
+                    setting_key: AVATAR_KEY,
+                    setting_value: base64
+                });
+                console.log('insert 结果:', error);
+                if (error) throw error;
             }
             console.log('✅ 头像已保存到云端');
             return base64;
