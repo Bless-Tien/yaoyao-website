@@ -352,6 +352,229 @@
             margin-top: 4px;
         }
 
+        /* ========== 猫咪智能体 ========== */
+        .cat-agent-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto 30px;
+            padding: 20px 30px 10px;
+            background: linear-gradient(135deg, rgba(240,249,255,0.8), rgba(224,242,254,0.5));
+            border-radius: 28px;
+            border: 2px solid rgba(56,189,248,0.15);
+            box-shadow: 0 4px 24px rgba(56,189,248,0.08);
+            user-select: none;
+            -webkit-user-select: none;
+            position: relative;
+        }
+
+        .cat-agent-stage {
+            width: 280px;
+            height: 340px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cat-agent-stage .cat-img {
+            height: 300px;
+            max-width: 250px;
+            object-fit: contain;
+            transition: all 0.4s ease;
+            filter: drop-shadow(0 6px 16px rgba(56,189,248,0.2));
+        }
+
+        .cat-agent-stage:hover .cat-img {
+            transform: scale(1.05);
+        }
+
+        .cat-agent-stage.mood-happy .cat-img {
+            animation: imgHappyBounce 1.2s ease-in-out infinite;
+        }
+        @keyframes imgHappyBounce {
+            0%, 100% { transform: translateY(0); }
+            40%, 60% { transform: translateY(-8px); }
+        }
+
+        .cat-agent-stage.mood-sleep .cat-img {
+            animation: imgSleepBreathe 3.5s ease-in-out infinite;
+        }
+        @keyframes imgSleepBreathe {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.03); }
+        }
+
+        .cat-agent-stage.mood-daze .cat-img {
+            animation: imgDazeWobble 4s ease-in-out infinite;
+        }
+        @keyframes imgDazeWobble {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(2deg); }
+            75% { transform: rotate(-2deg); }
+        }
+
+        .cat-agent-stage.mood-hungry .cat-img {
+            animation: imgHungryPulse 1.5s ease-in-out infinite;
+        }
+        @keyframes imgHungryPulse {
+            0%, 100% { transform: scaleY(1) scaleX(1); }
+            50% { transform: scaleY(1.04) scaleX(1.02); }
+        }
+
+        .cat-agent-stage.mood-sad .cat-img {
+            filter: drop-shadow(0 6px 16px rgba(100,150,200,0.2)) brightness(0.92);
+            transform: translateY(4px);
+        }
+
+        .cat-agent-stage.petted .cat-img {
+            animation: imgPetShake 0.5s ease;
+        }
+        @keyframes imgPetShake {
+            0% { transform: rotate(0deg); }
+            30% { transform: rotate(6deg); }
+            60% { transform: rotate(-4deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* 情绪气泡 */
+        .mood-bubble {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background: white;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 22px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            border: 2px solid rgba(56,189,248,0.2);
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0.5) translateY(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+        .mood-bubble.show {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+        .mood-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 15px;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border: 2px solid rgba(56,189,248,0.2);
+            border-top: none;
+            border-right: none;
+            transform: rotate(-45deg);
+            border-radius: 0 0 0 3px;
+        }
+
+        /* 情绪文字气泡 */
+        .mood-text {
+            position: absolute;
+            top: 30px;
+            right: -30px;
+            background: white;
+            border-radius: 16px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-family: 'ZCOOL KuaiLe', cursive;
+            color: var(--dark-brown);
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            border: 2px solid rgba(56,189,248,0.15);
+            z-index: 10;
+            max-width: 170px;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.5) translateY(10px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
+            pointer-events: none;
+            line-height: 1.5;
+        }
+        .mood-text.show {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        /* 情绪指示条 */
+        .cat-mood-bar {
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            border: 1px solid rgba(56,189,248,0.1);
+        }
+        .mood-bar-label {
+            font-size: 14px;
+            font-family: 'ZCOOL KuaiLe', cursive;
+            color: var(--warm-brown);
+            white-space: nowrap;
+        }
+        .mood-bar-track {
+            width: 120px;
+            height: 8px;
+            background: #DBEAFE;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .mood-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: all 0.5s ease;
+            width: 70%;
+        }
+        .mood-bar-emoji {
+            font-size: 20px;
+        }
+
+        /* 睡觉 ZZZ */
+        .sleep-zzz {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 18px;
+            color: #8B9DC3;
+            opacity: 0;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .sleep-zzz span {
+            display: inline-block;
+            animation: zzzFloat 2s ease-in-out infinite;
+        }
+        .sleep-zzz span:nth-child(2) { animation-delay: 0.4s; font-size: 22px; }
+        .sleep-zzz span:nth-child(3) { animation-delay: 0.8s; font-size: 26px; }
+
+        @keyframes zzzFloat {
+            0% { opacity: 0; transform: translateY(0) translateX(0); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-30px) translateX(10px); }
+        }
+
+        /* 爱心飘出 */
+        .cat-love-burst {
+            position: absolute;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 11;
+            animation: loveBurst 1.5s ease-out forwards;
+        }
+        @keyframes loveBurst {
+            0% { opacity: 1; transform: scale(0) translateY(0); }
+            30% { opacity: 1; transform: scale(1.2) translateY(-15px); }
+            100% { opacity: 0; transform: scale(0.8) translateY(-60px); }
+        }
+
         /* ========== 互动板块（投喂/铲屎/抚摸） ========== */
         .interact-section {
             background: linear-gradient(180deg, #F0F9FF 0%, #E0F2FE 100%);
@@ -1997,6 +2220,27 @@
             </div>
 
             <!-- 猫咪智能体 -->
+            <div class="cat-agent-container">
+                <div class="cat-agent-stage" id="catAgent" onclick="petCatAgent(event)">
+                    <!-- 睡觉 ZZZ -->
+                    <div class="sleep-zzz" id="sleepZzz"><span>z</span><span>Z</span><span>Z</span></div>
+                    <!-- 情绪气泡 -->
+                    <div class="mood-bubble" id="moodBubble">😊</div>
+                    <div class="mood-text" id="moodText">瑶瑶在发呆中...</div>
+                    <!-- 猫咪图片 -->
+                    <img class="cat-img" src="photos/yaoyao-agent.png" alt="瑶瑶智能体">
+                </div>
+                <!-- 情绪条 -->
+                <div class="cat-mood-bar">
+                    <span class="mood-bar-emoji" id="moodBarEmoji">😺</span>
+                    <span class="mood-bar-label" id="moodBarLabel">心情</span>
+                    <div class="mood-bar-track">
+                        <div class="mood-bar-fill" id="moodBarFill" style="width:70%;background:linear-gradient(90deg,#38BDF8,#BAE6FD);"></div>
+                    </div>
+                    <span class="mood-bar-label" id="moodBarValue">70</span>
+                </div>
+            </div>
+
 
 
             <div class="interact-grid">
@@ -2242,6 +2486,229 @@
     }
     calcAge();
 
+    // ==================== 猫咪智能体情绪系统 ====================
+    const catMoods = {
+        happy: {
+            emoji: '😆', bubble: '✨', barEmoji: '😺',
+            color: 'linear-gradient(90deg,#38BDF8,#BAE6FD)',
+            texts: ['喵呜～好开心呀！', '今天心情超好！', '铲屎官最好了～', '呼噜呼噜～'],
+            duration: [8000, 15000]
+        },
+        sleep: {
+            emoji: '😴', bubble: '💤', barEmoji: '😪',
+            color: 'linear-gradient(90deg,#93C5FD,#BFDBFE)',
+            texts: ['呼...呼...Zzz...', '别吵...本喵在睡觉...', '再睡五分钟...就五分钟...', '做梦梦见吃罐头...'],
+            duration: [10000, 20000]
+        },
+        daze: {
+            emoji: '😐', bubble: '💭', barEmoji: '😐',
+            color: 'linear-gradient(90deg,#7DD3FC,#BAE6FD)',
+            texts: ['在想中午吃什么...', '天花板上有只苍蝇...', '今天拆什么好呢...', '喵？刚才在想什么来着？'],
+            duration: [6000, 12000]
+        },
+        sad: {
+            emoji: '😿', bubble: '💧', barEmoji: '😿',
+            color: 'linear-gradient(90deg,#94A3B8,#CBD5E1)',
+            texts: ['没人陪本喵玩...', '好无聊啊...', '罐头什么时候才来...', '想拆家但是没力气...'],
+            duration: [8000, 15000]
+        },
+        hungry: {
+            emoji: '🤤', bubble: '🐟', barEmoji: '😽',
+            color: 'linear-gradient(90deg,#0284C7,#7DD3FC)',
+            texts: ['好饿啊！！给我吃的！！', '鱼干！猫条！罐头！', '肚子咕咕叫了...', '我要吃十罐罐头！！'],
+            duration: [6000, 12000]
+        }
+    };
+
+    let currentMood = 'daze';
+    let moodValue = 70;
+    let hungerValue = 30;
+    let moodTimer = null;
+    let moodTextTimer = null;
+    let lastInteractTime = Date.now();
+
+    function initCatAgent() {
+        const moods = Object.keys(catMoods);
+        setCatMood(moods[Math.floor(Math.random() * moods.length)]);
+        scheduleMoodChange();
+    }
+
+    function scheduleMoodChange() {
+        if (moodTimer) clearTimeout(moodTimer);
+        const nextMood = pickNextMood();
+        const delay = catMoods[nextMood].duration[0] + Math.random() * (catMoods[nextMood].duration[1] - catMoods[nextMood].duration[0]);
+        moodTimer = setTimeout(() => {
+            setCatMood(nextMood);
+            scheduleMoodChange();
+        }, delay);
+    }
+
+    function pickNextMood() {
+        const elapsed = Date.now() - lastInteractTime;
+        const rand = Math.random();
+
+        if (elapsed > 60000) {
+            if (hungerValue > 70) return 'hungry';
+            if (rand < 0.3) return 'sad';
+            if (rand < 0.5) return 'sleep';
+            if (rand < 0.7) return 'hungry';
+            return 'daze';
+        }
+
+        if (elapsed < 5000) {
+            return 'happy';
+        }
+
+        if (hungerValue > 60) return rand < 0.4 ? 'hungry' : 'happy';
+        if (moodValue > 70) return rand < 0.4 ? 'happy' : 'daze';
+        if (moodValue < 30) return rand < 0.5 ? 'sad' : 'sleep';
+        return 'daze';
+    }
+
+    function setCatMood(mood) {
+        currentMood = mood;
+        const stage = document.getElementById('catAgent');
+        const data = catMoods[mood];
+
+        stage.className = 'cat-agent-stage mood-' + mood;
+
+        const bubble = document.getElementById('moodBubble');
+        bubble.textContent = data.bubble;
+        bubble.classList.add('show');
+        setTimeout(() => bubble.classList.remove('show'), 3000);
+
+        showMoodText(data.texts[Math.floor(Math.random() * data.texts.length)]);
+
+        updateMoodBar();
+
+        const sleepZzz = document.getElementById('sleepZzz');
+        if (sleepZzz) sleepZzz.style.opacity = mood === 'sleep' ? '1' : '0';
+    }
+
+    function showMoodText(text) {
+        const el = document.getElementById('moodText');
+        if (!el) return;
+        if (moodTextTimer) clearTimeout(moodTextTimer);
+        el.classList.remove('show');
+        setTimeout(() => {
+            el.textContent = text;
+            el.classList.add('show');
+            moodTextTimer = setTimeout(() => {
+                el.classList.remove('show');
+            }, 4000);
+        }, 100);
+    }
+
+    function updateMoodBar() {
+        const data = catMoods[currentMood];
+        const fill = document.getElementById('moodBarFill');
+        const valueEl = document.getElementById('moodBarValue');
+        const emojiEl = document.getElementById('moodBarEmoji');
+        const labelEl = document.getElementById('moodBarLabel');
+
+        if (!fill || !valueEl || !emojiEl || !labelEl) return;
+
+        fill.style.background = data.color;
+        fill.style.width = moodValue + '%';
+        valueEl.textContent = moodValue;
+        emojiEl.textContent = data.barEmoji;
+
+        if (currentMood === 'hungry') {
+            labelEl.textContent = '饥饿';
+            fill.style.width = hungerValue + '%';
+            valueEl.textContent = hungerValue;
+        } else if (currentMood === 'sleep') {
+            labelEl.textContent = '困困';
+        } else if (currentMood === 'happy') {
+            labelEl.textContent = '心情';
+        } else if (currentMood === 'sad') {
+            labelEl.textContent = '心情';
+        } else {
+            labelEl.textContent = '心情';
+        }
+    }
+
+    // 点击猫咪 → 抚摸反应
+    function petCatAgent(e) {
+        e.stopPropagation();
+        lastInteractTime = Date.now();
+        moodValue = Math.min(100, moodValue + 5);
+        hungerValue = Math.max(0, hungerValue - 2);
+
+        const stage = document.getElementById('catAgent');
+        stage.classList.add('petted');
+        setTimeout(() => stage.classList.remove('petted'), 500);
+
+        // 飘出爱心
+        const hearts = ['❤️', '💕', '💖', '💗', '💙', '🩵'];
+        for (let i = 0; i < 3; i++) {
+            setTimeout(() => {
+                const heart = document.createElement('div');
+                heart.className = 'cat-love-burst';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = (80 + Math.random() * 60) + 'px';
+                heart.style.top = (60 + Math.random() * 40) + 'px';
+                stage.appendChild(heart);
+                setTimeout(() => heart.remove(), 1500);
+            }, i * 200);
+        }
+
+        if (currentMood !== 'happy') {
+            const prevMood = currentMood;
+            setCatMood('happy');
+            showMoodText('被摸了！好舒服喵～');
+            setTimeout(() => {
+                if (Date.now() - lastInteractTime > 3000) {
+                    setCatMood(prevMood);
+                }
+            }, 5000);
+        } else {
+            const happyTexts = ['呼噜呼噜～再摸摸～', '好幸福喵～', '喵呜～好舒服～', '本喵允许你继续摸！'];
+            showMoodText(happyTexts[Math.floor(Math.random() * happyTexts.length)]);
+        }
+
+        updateMoodBar();
+    }
+
+    // 互动操作影响猫咪情绪
+    function affectCatMood(action) {
+        lastInteractTime = Date.now();
+        switch(action) {
+            case 'feed':
+                moodValue = Math.min(100, moodValue + 15);
+                hungerValue = Math.max(0, hungerValue - 20);
+                if (moodValue > 80) {
+                    setCatMood('happy');
+                    showMoodText('吃饱了！好幸福～');
+                }
+                break;
+            case 'clean':
+                moodValue = Math.min(100, moodValue + 8);
+                if (moodValue > 60) {
+                    setCatMood('happy');
+                    showMoodText('干净的环境让本喵很满意！');
+                }
+                break;
+            case 'pet':
+                moodValue = Math.min(100, moodValue + 10);
+                setCatMood('happy');
+                showMoodText('呼噜呼噜～别停～');
+                break;
+        }
+        updateMoodBar();
+        scheduleMoodChange();
+    }
+
+    // 饥饿值自然增长（每30秒+1）
+    setInterval(() => {
+        hungerValue = Math.min(100, hungerValue + 1);
+        moodValue = Math.max(0, moodValue - 0.5);
+        updateMoodBar();
+    }, 30000);
+
+    // 初始化智能体
+    initCatAgent();
+
     // ==================== 互动系统 ====================
     let feedCount = 0, cleanCount = 0, petCount = 0;
 
@@ -2291,7 +2758,7 @@
             setTimeout(() => spawnFoodDrop(e), i * 200);
         }
         showCatResponse(texts[Math.floor(Math.random() * texts.length)]);
-
+        affectCatMood('feed');
     }
 
     // 铲屎
@@ -2314,7 +2781,7 @@
             setTimeout(() => spawnSparkle(e), i * 180);
         }
         showCatResponse(texts[Math.floor(Math.random() * texts.length)]);
-
+        affectCatMood('clean');
     }
 
     // 抚摸
@@ -2338,6 +2805,7 @@
         }
         purrEffect(e.currentTarget);
         showCatResponse(texts[Math.floor(Math.random() * texts.length)]);
+        affectCatMood('pet');
 
     }
 
