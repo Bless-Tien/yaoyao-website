@@ -3766,8 +3766,12 @@
     }
 
     async function loadAvatar() {
-        const { data, error } = await sb.from(SETTINGS_TABLE).select('setting_value').eq('setting_key', AVATAR_KEY).single();
-        if (error) { console.log('头像加载:', error.message); return null; }
+        // 用 rpc 调用避免缓存
+        const { data, error } = await sb.from(SETTINGS_TABLE)
+            .select('setting_value')
+            .eq('setting_key', AVATAR_KEY)
+            .single();
+        if (error) { console.log('头像加载失败:', error.message); return null; }
         console.log('✅ 从云端加载到头像, 长度:', data?.setting_value?.length || 0);
         return data?.setting_value || null;
     }
@@ -3779,13 +3783,17 @@
         const reader = new FileReader();
         reader.onload = async (e) => {
             const base64 = e.target.result;
-            document.getElementById('heroAvatar').src = base64;
-            localStorage.setItem('yaoyaoAvatar', base64);
             try {
                 await saveAvatar(base64);
+                // 保存成功后更新页面和本地缓存
+                document.getElementById('heroAvatar').src = base64;
+                localStorage.setItem('yaoyaoAvatar', base64);
                 showToast('🐱 头像已更换并同步！');
             } catch(err) {
                 console.error('头像同步失败:', err);
+                // 即使云端失败，本地也要更新
+                document.getElementById('heroAvatar').src = base64;
+                localStorage.setItem('yaoyaoAvatar', base64);
                 showToast('🐱 头像已更换（仅本设备）');
             }
         };
@@ -3800,14 +3808,20 @@
             if (cloudAvatar) {
                 document.getElementById('heroAvatar').src = cloudAvatar;
                 localStorage.setItem('yaoyaoAvatar', cloudAvatar);
-                return;
+                console.log('✅ 云端头像已加载, 长度:', cloudAvatar.length);
+            } else {
+                console.log('ℹ️ 云端无头像，使用本地缓存');
             }
-        } catch(e) {}
-        // 云端没有，用本地缓存
-        const savedAvatar = localStorage.getItem('yaoyaoAvatar');
-        if (savedAvatar) {
-            const img = document.getElementById('heroAvatar');
-            if (img) img.src = savedAvatar;
+        } catch(e) {
+            console.log('ℹ️ 加载云端头像失败，使用本地缓存:', e.message);
+        }
+        // 如果没有云端头像，用本地缓存
+        if (!document.getElementById('heroAvatar').src.includes('base64')) {
+            const savedAvatar = localStorage.getItem('yaoyaoAvatar');
+            if (savedAvatar) {
+                const img = document.getElementById('heroAvatar');
+                if (img) img.src = savedAvatar;
+            }
         }
     }
 
